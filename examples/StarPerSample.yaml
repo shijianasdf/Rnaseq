@@ -1,0 +1,11 @@
+---
+# Run STAR of with 2-pass with annotation mode for each sample
+## Assume the fastq files are .gz files
+star: /nas/is1/rnaseq_workspace/tools/STAR-STAR_2.4.1c/bin/Linux_x86_64_static/STAR
+options:
+  runThreadN: 8
+  genomeDir: /nas/is1/rnaseq_workspace/refs/ws235/STAR
+  sjdbGTFfile: /nas/is1/rnaseq_workspace/refs/ws235/Caenorhabditis_elegans.WBcel235.79.gtf
+  outSAMtype: BAM SortedByCoordinate
+  twopassMode: Basic
+  readFilesCommand: zcat
