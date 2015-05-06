@@ -6,7 +6,7 @@ StarAlignment<-function(fastq1, fastq2=NA, output.prefix, fn.yaml, execute=FALSE
   # execute         If TRUE, run the command line using the R system() function; just return the command line otherwise
   
   library(yaml);
-  yaml<-yaml.load_file(fn.yaml);
+  if (grepl('^http', fn.yaml)) yaml<-yaml.load(getURL(yaml)) else yaml<-yaml.load_file(fn.yaml);
   
   # Build command line
   cmmd<-yaml$star;
