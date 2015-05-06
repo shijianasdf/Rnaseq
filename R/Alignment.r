@@ -1,8 +1,8 @@
 # Generate a command line that performs a STAR alignment; optionally execute the command
 StarAlignment<-function(fastq1, fastq2=NA, output.prefix, fn.yaml, execute=FALSE) {
   # fastq1, fastq2  Fastq files of a sample
-  # output.prefix   Path and file name prefix of the output files
-  # fn.yaml            .yaml file that provides the run options; required a field called 'star' to the full path of the STAR program
+  # output.prefix   Path to the output files
+  # fn.yaml         .yaml file that provides the run options; required a field called 'star' to the full path of the STAR program
   # execute         If TRUE, run the command line using the R system() function; just return the command line otherwise
   
   library(yaml);
@@ -22,4 +22,8 @@ StarAlignment<-function(fastq1, fastq2=NA, output.prefix, fn.yaml, execute=FALSE
   # Append options
   options<-yaml$options;
   cmmd<-paste(cmmd, paste(paste(paste('--', names(options), sep=''), as.vector(options)), collapse=' '));
+  
+  if (execute) system(cmmd);
+  
+  cmmd;
 }
