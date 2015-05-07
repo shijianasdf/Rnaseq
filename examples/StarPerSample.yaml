@@ -7,5 +7,6 @@ options:
   genomeDir: /nas/is1/rnaseq_workspace/refs/ws235/STAR
   sjdbGTFfile: /nas/is1/rnaseq_workspace/refs/ws235/Caenorhabditis_elegans.WBcel235.79.gtf
   outSAMtype: BAM SortedByCoordinate
+  chimSegmentMin: 25
   twopassMode: Basic
   readFilesCommand: zcat
