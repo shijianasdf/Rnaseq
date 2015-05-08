@@ -19,4 +19,4 @@ wget https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/RunStar
 ```
 
 - Edit the RunStar.yaml file to specify inputs. Refer to STAR manual for details: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
-- 
+
