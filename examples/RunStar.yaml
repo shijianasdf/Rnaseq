@@ -35,6 +35,9 @@ options:
 # One or multiple samples, with unique sample names. 
 # The names will be used as prefix in output files
 fastq:
+  N2_H2O_1:
+    fastq1: /nas/is1/MFalk/BGI_Jan15_2014/N2_H2O_8_10_12_1/131127_I1082_FCC35NGACXX_L7_N2_H2O_8_10_12_1/131127_I1082_FCC35NGACXX_L7_N2_H2O_8_10_12_1_1.fq.gz
+    fastq2: /nas/is1/MFalk/BGI_Jan15_2014/N2_H2O_8_10_12_1/131127_I1082_FCC35NGACXX_L7_N2_H2O_8_10_12_1/131127_I1082_FCC35NGACXX_L7_N2_H2O_8_10_12_1_2.fq.gz # leave it empty for single-ended data
   N2_H2O_3:
     fastq1: /nas/is1/MFalk/BGI_Jan15_2014/N2_H2O_8_10_12_3/131213_I1009_FCC35NGACXX_L1_131100017/131213_I1009_FCC35NGACXX_L1_131100017_1.fq.gz
-    fastq2: /nas/is1/MFalk/BGI_Jan15_2014/N2_H2O_8_10_12_3/131213_I1009_FCC35NGACXX_L1_131100017/131213_I1009_FCC35NGACXX_L1_131100017_2.fq.gz # optional
+    fastq2: /nas/is1/MFalk/BGI_Jan15_2014/N2_H2O_8_10_12_3/131213_I1009_FCC35NGACXX_L1_131100017/131213_I1009_FCC35NGACXX_L1_131100017_2.fq.gz # leave it empty for single-ended data
