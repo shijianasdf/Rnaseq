@@ -8,3 +8,12 @@ library(devtools);
 install_github("zhezhangsh/Rnaseq");
 library(Rnaseq);
 ```
+
+
+#### Align reads with STAR
+
+- Under unix/linux shell, copy these 2 files into your working directory, preferentially where the outputs will be
+```
+wget https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/RunStar.yaml
+wget https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/RunStar.r
+```
