@@ -19,8 +19,9 @@ wget https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/RunStar
 ```
 
 - Edit the RunStar.yaml file to specify inputs. Refer to STAR manual for details: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
-- Create the shell command by running the R script and run the script. Make sure R is installed and Rscript is in your PATH
+- Create the shell command by running the R script and run the script. (Make sure R is installed and Rscript is in your PATH)
 ```
 Rscript ./RunStar.r ./RunStar.yaml ./RunStar.sh
+nohup sh ./RunStar.sh
 ```
 
