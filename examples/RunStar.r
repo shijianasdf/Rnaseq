@@ -1,6 +1,7 @@
 args<-commandArgs(TRUE); # YAML file name
 
 # read in the .yaml file
+library(yaml);
 yaml<-yaml.load_file(args[1]);
 
 # Input fastq files
