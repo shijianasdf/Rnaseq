@@ -4,6 +4,7 @@
 ############################################################################
 ## Run mode
 # 1: 1 pass per sample with annotation
+# 2: 2 pass per sample with annotation
 mode: 1
 ############################################################################
 ## STAR program location
