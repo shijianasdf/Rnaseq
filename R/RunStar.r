@@ -58,6 +58,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
   });
   
   names(cmmd)<-paste('pass', 1:length(cmmd), sep='');
+  cmmd<-lapply(cmmd, function(cmmd) sapply(cmmd, function(cmmd) paste(cmmd, collapse=' ')));
   
   cmmd;
 }
