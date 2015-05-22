@@ -8,7 +8,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
   fastq<-yaml$fastq;
   
   # Sample names, used as prefix of output files
-  nm<-names(fastq);
+  nms<-names(fastq);
   
   # path to output files
   path<-yaml$output;
@@ -27,7 +27,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
   
   # create command lines
   cmmd<-lapply(1:n, function(i) {
-    lines<-lapply(nm, function(nm) {
+    lines<-lapply(nms, function(nm) {
       ln<-c('############', paste('#', nm), yaml$star);
    
       # Add fastq file(s)
@@ -42,8 +42,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
       
       # Add SJ files created by the last pass
       if (i > 1) {
-        fn.sj<-dir(path.pass[i-1]);
-        fn.sj<-paste(path.pass[i-1], fn.sj[grep('SJ.out.tab$', fn.sj)], sep='/');
+        fn.sj<-paste(path.pass[i-1], '/', nms, '_SJ.out.tab', sep='');
         ln<-c(ln, paste(c("--sjdbFileChrStartEnd", fn.sj), collapse=' '));
       }
       
