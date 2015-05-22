@@ -53,6 +53,8 @@ RunStar<-function(fn.yaml, execute=FALSE) {
     });
     
     writeLines(paste(unlist(lines, use.names=FALSE), '\\'), paste(path.pass[i], 'RunStar.sh', sep='/'));
+    
+    lines;
   });
   
   names(cmmd)<-paste('pass', 1:length(cmmd), sep='');
