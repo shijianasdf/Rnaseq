@@ -27,7 +27,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
   
   # create command lines
   cmmd<-lapply(1:n, function(i) {
-    lines<-sapply(nm, function(nm) {
+    lines<-lapply(nm, function(nm) {
       ln<-c('############', paste('#', nm), yaml$star);
    
       # Add fastq file(s)
