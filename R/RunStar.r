@@ -83,6 +83,8 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         if (length(fn.req) > 0) {
           w<-warning("Required file(s) not exist: \n", paste(fn.req, collapse='\n'));
           cat(c('\n', '\n', date(), '\n', w), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
+        } else if (log[[i]][[j]]) {
+          cat(c('\n', '\n', date(), '\n', nms[j], ', pass', i, ': already aligned.\n'), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
         } else {
           ##########################################################################################
           cd<-system(c, intern=FALSE, ignore.stdout=TRUE, ignore.stderr=TRUE, wait=TRUE); # Run STAR
@@ -92,10 +94,10 @@ RunStar<-function(fn.yaml, execute=FALSE) {
           if (cd == 0) {
             log[[i]][[j]]<-TRUE;
             saveRDS(log, file=fn.log);
-            cat(c('\n', '\n', date(), '\n', 'Finished alignment:', nms[j], 'pass', i, '\n'), file=paste(yaml$output, 'RunStar.log', sep='/'));
+            cat(c('\n', '\n', date(), '\n', 'Finished alignment:', nms[j], 'pass', i, '\n'), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
           }
         }
-      }
+      } # end of for each sample
       # Delete intermediate SAM files
       if (i < length(log)) {
         fn.sam<-dir(path.pass[i]);
