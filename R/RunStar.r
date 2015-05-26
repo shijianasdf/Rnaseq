@@ -27,6 +27,8 @@ RunStar<-function(fn.yaml, execute=FALSE) {
   path.pass<-gsub('//', '/', path.pass);
   sapply(path.pass, function(path) if (!file.exists(path)) dir.create(path))->x; 
   
+  ######################################################################################################################################
+  ######################################################################################################################################
   # create command lines
   cmmd<-lapply(1:n, function(i) {
     lines<-lapply(nms, function(nm) {
@@ -60,8 +62,8 @@ RunStar<-function(fn.yaml, execute=FALSE) {
   names(cmmd)<-paste('pass', 1:length(cmmd), sep='');
   cmmd<-lapply(cmmd, function(cmmd) sapply(cmmd, function(cmmd) paste(cmmd[-(1:2)], collapse=' ')));
   
-  ##########################################################################################################
-  ##########################################################################################################
+  ############################################################################################################################################
+  ############################################################################################################################################
   # Make the actual runs
   if (execute) {
     # Keep track of process
@@ -69,8 +71,10 @@ RunStar<-function(fn.yaml, execute=FALSE) {
     if (!file.exists(fn.log)) {
       log<-lapply(1:length(cmmd), function(i) rep(FALSE, length(nms)));
       saveRDS(log, file=fn.log); 
-    } else log<-readRDS(fn.log);
-    
+    } else {
+      log<-readRDS(fn.log);
+      if (length(log) < length(cmmd)) log[(length(log)+1):length(cmmd)]<-lapply((length(log)+1):length(cmmd), function(i) rep(FALSE, length(nms)));
+    }
     for (i in 1:length(log)) { # For each pass
       for (j in 1:length(nms)) { # For each sample
         c<-cmmd[[i]][[j]]; # The command to run
@@ -86,6 +90,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         } else if (log[[i]][[j]]) {
           cat(c('\n', '\n', date(), '\n', nms[j], ', pass', i, ': already aligned.\n'), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
         } else {
+          cat('Running alignment:\n', cmmd);
           ##########################################################################################
           cd<-system(c, intern=FALSE, ignore.stdout=TRUE, ignore.stderr=TRUE, wait=TRUE); # Run STAR
           ##########################################################################################
@@ -102,7 +107,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
       if (i < length(log)) {
         fn.sam<-dir(path.pass[i]);
         fn.sam<-fn.sam[grep('Aligned.out.sam', fn.sam)];
-        file.remove(paste(path.pass[i], fn.sam, sep='/'));
+        if (length(fn.sam) > 0) file.remove(paste(path.pass[i], fn.sam, sep='/'));
       }
     } # End of for (i in 1:length(log))
   }
