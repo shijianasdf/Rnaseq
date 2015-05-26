@@ -39,7 +39,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
       ln<-c(ln, paste("--readFilesIn", fn));
       
       # Add other options
-      ln<-c(ln, as.vector(sapply(names(options), function(op) paste('--', op, ' ', as.vector(options[[op]]), sep=''))));
+      ln<-c(ln, as.vector(sapply(names(options), function(op) if (!is.null(options[[op]])) paste('--', op, ' ', as.vector(options[[op]]), sep='') else '')));
       
       # Add output path and prefix
       ln<-c(ln, paste("--outFileNamePrefix ", path.pass[i], '/', nm, '_', sep=''));
@@ -77,23 +77,26 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         log[(length(log)+1):length(cmmd)]<-lapply((length(log)+1):length(cmmd), function(i) rep(FALSE, length(nms)));
         saveRDS(log, file=fn.log);
       }
-    }
+    };
+    
     for (i in 1:length(cmmd)) { # For each pass
       for (j in 1:length(nms)) { # For each sample
         c<-cmmd[[i]][[j]]; # The command to run
         
         fn.req<-unlist(c(yaml$star, yaml$output, yaml$options$genomeDir, yaml$fastq[[j]]));
+        if (!is.null(yaml$options$sjdbGTFfile)) fn.req<-c(fn.req, yaml$options$sjdbGTFfile);
         fn.req<-fn.req[!file.exists(fn.req)];
         if (i > 1) fn.sj<-paste(path.pass[i-1], '/', nms, '_SJ.out.tab', sep='') else fn.sj<-character();
         fn.sj<-fn.sj[!file.exists(fn.sj)];
         fn.req<-c(fn.req, fn.sj);
+
         if (length(fn.req) > 0) {
           w<-warning("Required file(s) not exist: \n", paste(fn.req, collapse='\n'));
           cat(c('\n', '\n', date(), '\n', w), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
         } else if (log[[i]][[j]]) {
           cat(c('\n', '\n', date(), '\n', nms[j], ', pass', i, ': already aligned.\n'), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
         } else {
-          cat('Running alignment; ', 'sample:', nms[j], '; pass', i, '\n');
+          cat('Running alignment;', 'sample:', nms[j], '; pass', i, '\n');
           ##########################################################################################
           cd<-system(c, intern=FALSE, ignore.stdout=TRUE, ignore.stderr=TRUE, wait=TRUE); # Run STAR
           ##########################################################################################
