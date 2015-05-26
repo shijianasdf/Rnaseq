@@ -93,7 +93,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         } else if (log[[i]][[j]]) {
           cat(c('\n', '\n', date(), '\n', nms[j], ', pass', i, ': already aligned.\n'), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
         } else {
-          cat('Running alignment:\n', cmmd[[i]][[j]]);
+          cat('\nRunning alignment:\n', cmmd[[i]][[j]]);
           ##########################################################################################
           cd<-system(c, intern=FALSE, ignore.stdout=TRUE, ignore.stderr=TRUE, wait=TRUE); # Run STAR
           ##########################################################################################
