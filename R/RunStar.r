@@ -73,9 +73,12 @@ RunStar<-function(fn.yaml, execute=FALSE) {
       saveRDS(log, file=fn.log); 
     } else {
       log<-readRDS(fn.log);
-      if (length(log) < length(cmmd)) log[(length(log)+1):length(cmmd)]<-lapply((length(log)+1):length(cmmd), function(i) rep(FALSE, length(nms)));
+      if (length(log) < length(cmmd)) {
+        log[(length(log)+1):length(cmmd)]<-lapply((length(log)+1):length(cmmd), function(i) rep(FALSE, length(nms)));
+        saveRDS(log, file=fn.log);
+      }
     }
-    for (i in 1:length(log)) { # For each pass
+    for (i in 1:length(cmmd)) { # For each pass
       for (j in 1:length(nms)) { # For each sample
         c<-cmmd[[i]][[j]]; # The command to run
         
@@ -90,7 +93,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         } else if (log[[i]][[j]]) {
           cat(c('\n', '\n', date(), '\n', nms[j], ', pass', i, ': already aligned.\n'), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
         } else {
-          cat('Running alignment:\n', cmmd);
+          cat('Running alignment:\n', cmmd[[i]][[j]]);
           ##########################################################################################
           cd<-system(c, intern=FALSE, ignore.stdout=TRUE, ignore.stderr=TRUE, wait=TRUE); # Run STAR
           ##########################################################################################
@@ -104,7 +107,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         }
       } # end of for each sample
       # Delete intermediate SAM files
-      if (i < length(log)) {
+      if (i < length(cmmd)) {
         fn.sam<-dir(path.pass[i]);
         fn.sam<-fn.sam[grep('Aligned.out.sam', fn.sam)];
         if (length(fn.sam) > 0) file.remove(paste(path.pass[i], fn.sam, sep='/'));
