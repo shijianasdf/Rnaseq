@@ -1,7 +1,8 @@
 # Run STAR based on inputs defined by a .yaml file
-RunStar<-function(fn.yaml, execute=FALSE) {
+RunStar<-function(fn.yaml, execute=FALSE, will.qsub=FALSE, qsub.path=c('/nas/is1', '/mnt/isilon/cbmi/variome')) {
   # fn.yaml   Name of the .yaml file defines the run inputs
   # execute   Just save the shell script if FALSE; run STAR alignment if TRUE
+  # will.qsub Whether to execute with qsub. Generate script within a subfolder scripts if TRUE
   
   library(yaml);
   yaml<-yaml.load_file(fn.yaml);
@@ -39,6 +40,7 @@ RunStar<-function(fn.yaml, execute=FALSE) {
       ln<-c(ln, paste("--readFilesIn", fn));
       
       # Add other options
+      if (i == length(path.pass)) options$outSAMtype<-"BAM SortedByCoordinate";
       ln<-c(ln, as.vector(sapply(names(options), function(op) if (!is.null(options[[op]])) paste('--', op, ' ', as.vector(options[[op]]), sep='') else '')));
       
       # Add output path and prefix
@@ -49,13 +51,33 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         fn.sj<-paste(path.pass[i-1], '/', nms, '_SJ.out.tab', sep='');
         ln<-c(ln, paste(c("--sjdbFileChrStartEnd", fn.sj), collapse=' '));
       }
-            
+      
+      if (length(ln) > 3) ln[3:(length(ln)-1)]<-paste(ln[3:(length(ln)-1)], '\\');
       c(ln, '', '');
     });
+
+    ############################################################################################################################################
+    # Prepare command for qsub run
+    if (will.qsub) {
+      #path.qsub<-paste(path.pass[i], 'qsub', sep='/');
+      #if (!file.exists(path.qsub)) dir.create(path.qsub);
+      names(lines)<-nms;
+      fn<-sapply(nms, function(nm) {
+        fn<-paste(path.pass[i], '/STAR_', nm, '.sh', sep='');
+        l<-lines[[nm]]; 
+        l<-gsub(qsub.path[1], qsub.path[2], l);
+        #ind<-grep("^--outFileNamePrefix ", l);
+        #if (length(ind)>0) l[ind]<-paste("--outFileNamePrefix ", path.pass[i], '/qsub/', nm, '_', sep='')
+        writeLines(l, fn);
+        #paste(nm, 'sh', sep='.');
+      });
+      #l<-paste(paste('qsub', fn), collapse='; ');
+      #writeLines(l, paste(path.qsub, 'qsub', sep='/'));
+    }
+    ############################################################################################################################################
     
-    writeLines(paste(unlist(lines, use.names=FALSE), '\\'), paste(path.pass[i], 'RunStar.sh', sep='/'));
+    writeLines(unlist(lines, use.names=FALSE), paste(path.pass[i], 'RunStar.sh', sep='/'));
     
-    names(lines)<-
     lines;
   });
   
@@ -110,11 +132,10 @@ RunStar<-function(fn.yaml, execute=FALSE) {
         }
       } # end of for each sample
       # Delete intermediate SAM files
-      if (i < length(cmmd)) {
-        fn.sam<-dir(path.pass[i]);
-        fn.sam<-fn.sam[grep('Aligned.out.sam', fn.sam)];
-        if (length(fn.sam) > 0) file.remove(paste(path.pass[i], fn.sam, sep='/'));
-      }
+      fn.sam<-dir(path.pass[i]);
+      fn.sam<-fn.sam[grep('Aligned.out.sam', fn.sam)];
+      if (length(fn.sam) > 0) file.remove(paste(path.pass[i], fn.sam, sep='/'));
+      
     } # End of for (i in 1:length(log))
   }
   
