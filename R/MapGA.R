@@ -21,23 +21,28 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), max.cl
     names(gr)<-sapply(gr, function(gr) as.vector(seqnames(gr))[1]);
   }
   
+  #ncore<-min(max.cluster, length(gr));
+  
   # Loading reads
-  reads<-parallel::mclapply(gr, function(g) {
+  reads<-lapply(gr, function(g) {
     cat("Loading reads on chromosome", as.vector(seqnames(g))[1], '\n');
     if (paired) LoadGaPe(bam, g, min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
   }); 
   
-  reads<-parallel::mclapply(reads, function(rd) {
-    if (paired) {
-      if (!identical(exons, NA)) {
-        rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn);
-        rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn);
-      } 
-    } else {
-      if (!identical(exons, NA)) {
-        rd$interval<-MapInterval2Exon(rd$interval, exons, 'within', strand.match, ex2tx, tx2gn);
+  reads<-lapply(reads, function(rd) {
+    if (length(rd[[1]])>0) {
+      if (paired) {
+        if (!identical(exons, NA)) {
+          rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn);
+          rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn);
+        } 
+      } else {
+        if (!identical(exons, NA)) {
+          rd$interval<-MapInterval2Exon(rd$interval, exons, 'within', strand.match, ex2tx, tx2gn);
+        }
       }
     }
+    
     rd; 
   });
   names(reads)<-names(gr);
@@ -169,13 +174,4 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   if (use.names & !is.null(names(ga))) gr$read<-names(ga)[gr$read];
   
   gr;
-}
-
-test<-function(bam, gr) {
-  reads<-LoadGaPe(bam, gr); 
-  
-  mp1<-MapInterval2Exon(reads[[3]][[1]], exons, 'within', -1, ex2tx, tx2gn); 
-  mp2<-MapInterval2Exon(reads[[3]][[2]], exons, 'within',  1, ex2tx, tx2gn); 
-  
-  list(mp1, mp2); 
 }

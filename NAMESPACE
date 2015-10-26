@@ -8,5 +8,4 @@ export("MapInterval2Exon");
 export("PlotLogScatter");
 export("RunStar");
 export("StarAlignment");
-export("test");
 
