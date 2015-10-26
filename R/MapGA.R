@@ -146,7 +146,7 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   gr.list<-grglist(ga); print(1);
   n<-elementLengths(gr.list);print(class(gr.list[[1]]));
   saveRDS(gr.list, '~/tmp0.rds');
-  gr<-unlist(gr.list); print(1.5); saveRDS(gr, '~/tmp.rds');
+  gr<-BiocGenerics::unlist(gr.list); print(1.5); saveRDS(gr, '~/tmp.rds');
   gr$read<-rep(1:length(ga), n);print(2);
 
   # The interval that is the first or the last interval of a read (strand specific);
