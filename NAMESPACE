@@ -1,7 +1,6 @@
 
 export("ConvertGa2Gr");
 export("ConvertSam2Bam");
-export("LoadGa.MapExon");
 export("LoadGa");
 export("LoadGaPe");
 export("LoadGaSe");

@@ -8,39 +8,42 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), max.cl
   # max.cluster     Max number of clusters for parrallele processing
   # strand.match    Read-to-exon strand match; 0 no match; 1 match; -1 reverse match. Should be reverse match for most RNA-seq protocols  
   
+  require("GenomicRanges");
+  require("GenomicAlignments");
+  require("Rnaseq");
+  
   if (identical(gr, NA)) {
     chr<-scanBamHeader(bam)[[1]][[1]];
     gr<-lapply(names(chr), function(nm) GRanges(nm, IRanges(1, chr[nm])));
     names(gr)<-names(chr);
   } else {
-    gr<-list(gr);
+    gr<-split(gr, as.vector(seqnames(gr)));
+    names(gr)<-sapply(gr, function(gr) as.vector(seqnames(gr))[1]);
   }
   
-  n.cluster<-min(max.cluster, length(gr));
-  cl<-snow::makeCluster(n.cluster, type='SOCK');
-  reads<-snow::clusterApplyLB(cl, gr, LoadGa.MapExon, bam0=bam, paired=paired, exons=exons, ex2tx=ex2tx, tx2gn=tx2gn, min.mapq=min.mapq, strand.match=strand.match);
-  snow::stopCluster(cl);
+  # Loading reads
+  reads<-parallel::mclapply(names(gr), function(nm) {
+    cat("Loading reads on chromosome", nm, '\n');
+    if (paired) LoadGaPe(bam, gr[[nm]], min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
+  }); 
+  
+  reads<-parallel::mclapply(reads, function(rd) {
+    if (paired) {
+      if (!identical(exons, NA)) {
+        rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn);
+        rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn);
+      } 
+    } else {
+      if (!identical(exons, NA)) {
+        rd$interval<-MapInterval2Exon(rd$interval, exons, 'within', strand.match, ex2tx, tx2gn);
+      }
+    }
+    rd; 
+  });
+  names(reads)<-names(gr);
   
   reads;
 }
-
-###############################################################################################################
-# Wrapper of load BAM and then map reads to Exons
-LoadGa.MapExon<-function(gr0, bam0, paired, exons, ex2tx, tx2gn, min.mapq, strand.match) {
-  if (paired) {
-    read0<-LoadGaPe(bam0, gr0, min.mapq);
-    if (!identical(exons, NA)) {
-      read0$interval[[1]]<-MapInterval2Exon(read0$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn);
-      read0$interval[[2]]<-MapInterval2Exon(read0$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn);
-    } 
-  } else {
-    read0<-LoadGaSe(bam0, gr0, min.mapq);
-    if (!identical(exons, NA)) {
-      read0$interval<-MapInterval2Exon(read0$interval, exons, 'within', strand.match, ex2tx, tx2gn);
-    }
-  }
-}
-###############################################################################################################
 
 # Maping mapped read intervals to exons or other ungapped genomic features
 MapInterval2Exon<-function(intv, exons, type='within', strand=1, ex2tx=c(), tx2gn=c()) {
@@ -48,6 +51,9 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=1, ex2tx=c(), tx2g
   # exons   GRanges object, location of exons or other ungapped genomic features; must have unique names
   # type    Type of overlapping, by default, mapping interval must be completely within exon
   # strand  Whether the overlapping should match strand; 0 no matrch, 1 must match, -1 must match reversely
+
+  require("GenomicRanges");
+  require("GenomicAlignments");
   
   if (strand == 0) ig<-TRUE else ig<-FALSE;
   
