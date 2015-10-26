@@ -1,0 +1,175 @@
+LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), max.cluster=1, min.mapq=1, strand.match=-1) {
+  # bam             Full path to bam file
+  # gr              GRanges object specifies regions or chromsomes; the whole bam file if NA
+  # paired          Paired or single ended reads
+  # exons           Location of exons
+  # ex2tx           Exon to transcript mapping
+  # tx2gn           Transcript to gene mapping
+  # max.cluster     Max number of clusters for parrallele processing
+  # strand.match    Read-to-exon strand match; 0 no match; 1 match; -1 reverse match. Should be reverse match for most RNA-seq protocols  
+  
+  if (identical(gr, NA)) {
+    chr<-scanBamHeader(bam)[[1]][[1]];
+    gr<-lapply(names(chr), function(nm) GRanges(nm, IRanges(1, chr[nm])));
+    names(gr)<-names(chr);
+  } else {
+    gr<-list(gr);
+  }
+  
+  n.cluster<-min(max.cluster, length(gr));
+  cl<-snow::makeCluster(n.cluster, type='SOCK');
+  reads<-snow::clusterApplyLB(cl, gr, LoadGa.MapExon, bam0=bam, paired=paired, exons=exons, ex2tx=ex2tx, tx2gn=tx2gn, min.mapq=min.mapq, strand.match=strand.match);
+  snow::stopCluster(cl);
+  
+  reads;
+}
+
+###############################################################################################################
+# Wrapper of load BAM and then map reads to Exons
+LoadGa.MapExon<-function(gr0, bam0, paired, exons, ex2tx, tx2gn, min.mapq, strand.match) {
+  if (paired) {
+    read0<-LoadGaPe(bam0, gr0, min.mapq);
+    if (!identical(exons, NA)) {
+      read0$interval[[1]]<-MapInterval2Exon(read0$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn);
+      read0$interval[[2]]<-MapInterval2Exon(read0$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn);
+    } 
+  } else {
+    read0<-LoadGaSe(bam0, gr0, min.mapq);
+    if (!identical(exons, NA)) {
+      read0$interval<-MapInterval2Exon(read0$interval, exons, 'within', strand.match, ex2tx, tx2gn);
+    }
+  }
+}
+###############################################################################################################
+
+# Maping mapped read intervals to exons or other ungapped genomic features
+MapInterval2Exon<-function(intv, exons, type='within', strand=1, ex2tx=c(), tx2gn=c()) {
+  # intv    GRanges object, genomic intervals returned by the ConvertGa2Gr function
+  # exons   GRanges object, location of exons or other ungapped genomic features; must have unique names
+  # type    Type of overlapping, by default, mapping interval must be completely within exon
+  # strand  Whether the overlapping should match strand; 0 no matrch, 1 must match, -1 must match reversely
+  
+  if (strand == 0) ig<-TRUE else ig<-FALSE;
+  
+  if (strand < 0) strand(exons)<-c('+'='-', '-'='+', '*'='*')[as.vector(strand(exons))];
+  
+  olap<-as.matrix(findOverlaps(intv, exons, type=type, ignore.strand=ig));
+  
+  mp<-intv[olap[, 1]];
+  ex<-exons[olap[, 2]];
+  mp$exon<-names(ex);
+  
+  mx<-rep(0, length(mp)); # max extension allowed by the boundary of exon
+  ext<-mp$extension;
+  str<-as.vector(strand(mp));
+  stt0<-start(mp);
+  end0<-end(mp);
+  stt1<-start(ex);
+  end1<-end(ex);
+  ind<-which(str=='-' & ext>0);
+  if (length(ind)>0) mx[ind] <- pmin(stt0[ind]-stt1[ind], ext[ind]);
+  ind<-which(str=='+' & ext>0);
+  if (length(ind)>0) mx[ind] <- pmin(end1[ind]-end0[ind], ext[ind]);
+  mp$max.extension<-mx;
+  
+  if (length(ex2tx)) mp$transcript<-as.vector(ex2tx[mp$exon]);
+  if (length(tx2gn)) mp$gene<-as.vector(tx2gn[mp$transcript]);
+  
+  mp;
+}
+
+# Load BAM file of paired end reads
+LoadGaPe<-function(bam, gr, min.mapq=1) {
+  
+  require("GenomicRanges");
+  require("GenomicAlignments");
+  
+  prm<-ScanBamParam(which=gr, mapqFilter=min.mapq, flag=scanBamFlag(
+    isPaired=TRUE,
+    isUnmappedQuery=FALSE,
+    hasUnmappedMate=FALSE,
+    isNotPassingQualityControls=FALSE)); 
+  
+  flushDumpedAlignments();
+  reads<-readGAlignmentPairs(bam, use.names=TRUE, param=prm);
+  dmp<-getDumpedAlignments();
+  
+  gr.fst<-ConvertGa2Gr(reads@first);
+  gr.lst<-ConvertGa2Gr(reads@last);
+  
+  loaded<-list(names=reads@NAMES, paired=TRUE, interval=list(first=gr.fst, last=gr.lst), dumped=dmp);
+  
+  loaded;
+}
+
+# Load BAM file of single end reads
+LoadGaSe<-function(bam, gr, min.mapq=1) {
+  
+  require("GenomicRanges");
+  require("GenomicAlignments");
+  
+  prm<-ScanBamParam(which=gr, mapqFilter=min.mapq, flag=scanBamFlag(
+    isUnmappedQuery=FALSE,
+    isNotPassingQualityControls=FALSE));
+  
+  flushDumpedAlignments();
+  reads<-readGAlignments(bam, use.names=TRUE, param=prm);
+  dmp<-getDumpedAlignments();
+  
+  gr<-ConvertGa2Gr(reads@first);
+  
+  loaded<-list(names=reads@NAMES, paired=FALSE, interval=gr, dumped=dmp);
+  
+  loaded;
+}
+
+# Convert gapped alignment of reads to split intervals without gap
+ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
+  # ga            A <GAlignment> object
+  # read.length   Sequencing read length
+  # use.names     Use original read ID to label intervals
+  
+  gr.list<-grglist(ga);
+  n<-elementLengths(gr.list);
+
+  gr<-unlist(gr.list);
+  gr$read<-rep(1:length(ga), n);
+    
+  # The interval that is the first or the last interval of a read (strand specific);
+  cumsum(n)->rsum;
+  end<-rsum;
+  stt<-c(1, rsum[-length(rsum)]+1);
+  str<-as.vector(strand(ga));
+  
+  fst<-rep(0, length(gr)); 
+  fst[stt[str=='+']]<-1;
+  fst[end[str=='-']]<-1;
+  gr$is.first<-fst;
+  
+  lst<-rep(0, length(gr));
+  lst[end[str=='+']]<-1;
+  lst[stt[str=='-']]<-1;
+  gr$is.last=lst;
+  
+  # Possible extension of the last interval when the total mapped length is smaller than read length
+  w<-width(gr); 
+  w<-split(w, gr$read);
+  len<-sapply(w, sum);  # total mapped length of a read (reads with deletion will be longer than read length);
+  ex<-pmax(0, read.length-len);
+  ext<-rep(0, length(gr));
+  ext[lst==1]<-ex;
+  gr$extension<-ext;
+  
+  if (use.names & !is.null(names(ga))) gr$read<-names(ga)[gr$read];
+  
+  gr;
+}
+
+test<-function(bam, gr) {
+  reads<-LoadGaPe(bam, gr); 
+  
+  mp1<-MapInterval2Exon(reads[[3]][[1]], exons, 'within', -1, ex2tx, tx2gn); 
+  mp2<-MapInterval2Exon(reads[[3]][[2]], exons, 'within',  1, ex2tx, tx2gn); 
+  
+  list(mp1, mp2); 
+}

@@ -1,1 +1,13 @@
+
+export("ConvertGa2Gr");
+export("ConvertSam2Bam");
+export("LoadGa.MapExon");
+export("LoadGa");
+export("LoadGaPe");
+export("LoadGaSe");
+export("MapInterval2Exon");
+export("PlotLogScatter");
 export("RunStar");
+export("StarAlignment");
+export("test");
+
