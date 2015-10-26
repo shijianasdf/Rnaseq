@@ -30,7 +30,7 @@ print(1);
   reads<-lapply(reads, function(rd) {
     if (length(rd[[1]])>0) {
       if (paired) {
-        if (!identical(exons, NA)) {
+        if (!identical(exons, NA)) { print(1);
           rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn); print(2);
           rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn); print(3);
         } 
