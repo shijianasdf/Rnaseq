@@ -144,8 +144,8 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   # use.names     Use original read ID to label intervals
   
   gr.list<-grglist(ga); print(1);
-  n<-elementLengths(gr.list);print(1);
-
+  n<-elementLengths(gr.list);print(class(gr.list[[1]]));
+  
   gr<-unlist(gr.list);
   gr$read<-rep(1:length(ga), n);print(2);
     
