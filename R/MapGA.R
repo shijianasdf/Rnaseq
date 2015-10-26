@@ -40,7 +40,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
         }
       }
     }; 
-    rd$dumped<-MapInterval2Exon(ConvertGa2Gr(rd$dumped), exons, 'within', 0, ex2tx, tx2gn); print(5);
+    rd$dumped<-MapInterval2Exon(ConvertGa2Gr(rd$dumped), exons, 'within', 0, ex2tx, tx2gn); 
     
     rd; 
   });
@@ -62,7 +62,6 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
   if (strand == 0) ig<-TRUE else ig<-FALSE;
   
   if (strand < 0) strand(exons)<-c('+'='-', '-'='+', '*'='*')[as.vector(strand(exons))];
-  saveRDS(list(intv, exons, type, ig), '~/tmp.rds');
   x<-GenomicRanges::findOverlaps(intv, exons, type=type, ignore.strand=ig);
   print(class(x));
   saveRDS(x, '~/tmp0.rds');
@@ -146,7 +145,7 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   # use.names     Use original read ID to label intervals
   
   gr.list<-grglist(ga); 
-  n<-elementLengths(gr.list);print(class(gr.list[[1]]));
+  n<-elementLengths(gr.list);
 
   gr<-BiocGenerics::unlist(gr.list); 
   gr$read<-rep(1:length(ga), n);
