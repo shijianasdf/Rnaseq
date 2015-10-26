@@ -39,7 +39,7 @@ print(1);
           rd$interval<-MapInterval2Exon(rd$interval, exons, 'within', strand.match, ex2tx, tx2gn);
         }
       }
-    } print(4);
+    }; print(4);
     rd$dumped<-MapInterval2Exon(ConvertGa2Gr(rd$dumped), exons, 'within', 0, ex2tx, tx2gn); print(5);
     
     rd; 
