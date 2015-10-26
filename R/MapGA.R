@@ -10,15 +10,15 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
   require("GenomicRanges");
   require("GenomicAlignments");
   require("Rnaseq");
-  
+
   if (identical(gr, NA)) {
     chr<-scanBamHeader(bam)[[1]][[1]];
     gr<-GRanges(names(chr), IRanges(1, chr));
   } 
-    
+
   gr<-lapply(unique(as.vector(seqnames(gr))), function(c) gr[seqnames(gr)==c]);
   names(gr)<-sapply(gr, function(gr) as.vector(seqnames(gr))[1]);
-  
+
   #ncore<-min(max.cluster, length(gr));
   
   # Loading reads
@@ -26,7 +26,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
     cat("Loading reads on chromosome", as.vector(seqnames(g))[1], '\n');
     if (paired) LoadGaPe(bam, g, min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
   }); 
-  
+
   reads<-lapply(reads, function(rd) {
     if (length(rd[[1]])>0) {
       if (paired) {
@@ -45,7 +45,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
     rd; 
   });
   names(reads)<-names(gr);
-  
+
   reads;
 }
 
@@ -143,27 +143,27 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   # read.length   Sequencing read length
   # use.names     Use original read ID to label intervals
   
-  gr.list<-grglist(ga);
-  n<-elementLengths(gr.list);
+  gr.list<-grglist(ga); print(1);
+  n<-elementLengths(gr.list);print(1);
 
   gr<-unlist(gr.list);
-  gr$read<-rep(1:length(ga), n);
+  gr$read<-rep(1:length(ga), n);print(2);
     
   # The interval that is the first or the last interval of a read (strand specific);
   cumsum(n)->rsum;
   end<-rsum;
   stt<-c(1, rsum[-length(rsum)]+1);
-  str<-as.vector(strand(ga));
+  str<-as.vector(strand(ga));print(3);
   
   fst<-rep(0, length(gr)); 
   fst[stt[str=='+']]<-1;
   fst[end[str=='-']]<-1;
-  gr$is.first<-fst;
+  gr$is.first<-fst;print(4);
   
   lst<-rep(0, length(gr));
   lst[end[str=='+']]<-1;
   lst[stt[str=='-']]<-1;
-  gr$is.last=lst;
+  gr$is.last=lst;print(5);
   
   # Possible extension of the last interval when the total mapped length is smaller than read length
   w<-width(gr); 
@@ -172,7 +172,7 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   ex<-pmax(0, read.length-len);
   ext<-rep(0, length(gr));
   ext[lst==1]<-ex;
-  gr$extension<-ext;
+  gr$extension<-ext;print(6);
   
   if (use.names & !is.null(names(ga))) gr$read<-names(ga)[gr$read];
   
