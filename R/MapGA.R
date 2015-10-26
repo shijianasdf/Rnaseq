@@ -62,8 +62,8 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
   if (strand == 0) ig<-TRUE else ig<-FALSE;
   
   if (strand < 0) strand(exons)<-c('+'='-', '-'='+', '*'='*')[as.vector(strand(exons))];
-  x<-IRanges::findOverlaps(intv, exons, type=type, ignore.strand=ig);
-  print(class(x));
+  x<-GenomicAlignments::findOverlaps(intv, exons, type=type, ignore.strand=ig);
+  print(class(x)); print(2);
   saveRDS(x, '~/tmp0.rds');
   olap<-as.matrix(x);
   
