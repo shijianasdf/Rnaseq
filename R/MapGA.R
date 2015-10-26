@@ -96,23 +96,23 @@ LoadGaPe<-function(bam, gr, min.mapq=1, wht=character(0)) {
   
   require("GenomicRanges");
   require("GenomicAlignments");
-  
+  print(1);
   prm<-ScanBamParam(which=gr, what=wht, mapqFilter=min.mapq, flag=scanBamFlag(
     isPaired=TRUE,
     isUnmappedQuery=FALSE,
     hasUnmappedMate=FALSE,
     isNotPassingQualityControls=FALSE)); 
-  
+  print(2);
   flushDumpedAlignments();
   reads<-readGAlignmentPairs(bam, use.names=TRUE, param=prm);
   dmp<-getDumpedAlignments();
-  
+  print(3);
   gr.fst<-ConvertGa2Gr(reads@first);
   gr.lst<-ConvertGa2Gr(reads@last);
   
-  
+  print(4);
   loaded<-list(names=reads@NAMES, paired=TRUE, interval=list(first=gr.fst, last=gr.lst), dumped=dmp);
-  
+  print(5);
   loaded;
 }
 
@@ -143,27 +143,27 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   # read.length   Sequencing read length
   # use.names     Use original read ID to label intervals
   
-  gr.list<-grglist(ga); print(1);
+  gr.list<-grglist(ga); 
   n<-elementLengths(gr.list);print(class(gr.list[[1]]));
-  saveRDS(gr.list, '~/tmp0.rds');
-  gr<-BiocGenerics::unlist(gr.list); print(1.5); saveRDS(gr, '~/tmp.rds');
-  gr$read<-rep(1:length(ga), n);print(2);
+
+  gr<-BiocGenerics::unlist(gr.list); 
+  gr$read<-rep(1:length(ga), n);
 
   # The interval that is the first or the last interval of a read (strand specific);
   cumsum(n)->rsum;
   end<-rsum;
   stt<-c(1, rsum[-length(rsum)]+1);
-  str<-as.vector(strand(ga));print(3);
+  str<-as.vector(strand(ga));
   
   fst<-rep(0, length(gr)); 
   fst[stt[str=='+']]<-1;
   fst[end[str=='-']]<-1;
-  gr$is.first<-fst;print(4);
+  gr$is.first<-fst;
   
   lst<-rep(0, length(gr));
   lst[end[str=='+']]<-1;
   lst[stt[str=='-']]<-1;
-  gr$is.last=lst;print(5);
+  gr$is.last=lst;
   
   # Possible extension of the last interval when the total mapped length is smaller than read length
   w<-width(gr); 
@@ -172,7 +172,7 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   ex<-pmax(0, read.length-len);
   ext<-rep(0, length(gr));
   ext[lst==1]<-ex;
-  gr$extension<-ext;print(6);
+  gr$extension<-ext;
   
   if (use.names & !is.null(names(ga))) gr$read<-names(ga)[gr$read];
   
