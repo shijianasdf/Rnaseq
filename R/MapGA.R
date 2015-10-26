@@ -17,14 +17,14 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), max.cl
     gr<-lapply(names(chr), function(nm) GRanges(nm, IRanges(1, chr[nm])));
     names(gr)<-names(chr);
   } else {
-    gr<-split(gr, as.vector(seqnames(gr)));
+    gr<-lapply(unique(as.vector(seqnames(gr))), function(c) gr[seqnames(gr)==c]);
     names(gr)<-sapply(gr, function(gr) as.vector(seqnames(gr))[1]);
   }
   
   # Loading reads
-  reads<-parallel::mclapply(names(gr), function(nm) {
-    cat("Loading reads on chromosome", nm, '\n');
-    if (paired) LoadGaPe(bam, gr[[nm]], min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
+  reads<-parallel::mclapply(gr, function(g) {
+    cat("Loading reads on chromosome", as.vector(seqnames(g))[1], '\n');
+    if (paired) LoadGaPe(bam, g, min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
   }); 
   
   reads<-parallel::mclapply(reads, function(rd) {
