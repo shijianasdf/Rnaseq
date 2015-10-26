@@ -58,17 +58,17 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
 
   require("GenomicRanges");
   require("GenomicAlignments");
-  print(1);
+  
   if (strand == 0) ig<-TRUE else ig<-FALSE;
   
   if (strand < 0) strand(exons)<-c('+'='-', '-'='+', '*'='*')[as.vector(strand(exons))];
-  print(2);
+  saveRDS(list(intv, exons, type, ig), '~/tmp.rds');
   olap<-as.matrix(findOverlaps(intv, exons, type=type, ignore.strand=ig));
-  print(3);
+  
   mp<-intv[olap[, 1]];
   ex<-exons[olap[, 2]];
   mp$exon<-names(ex);
-  print(4);
+  
   mx<-rep(0, length(mp)); # max extension allowed by the boundary of exon
   ext<-mp$extension;
   str0<-as.vector(strand(mp));
@@ -84,7 +84,7 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
   mp$same.strand<-str0==str1;
   if (strand==-1) mp$same.strand<-!mp$same.strand;
   mp$max.extension<-mx;
-  print(5);
+  
   if (length(ex2tx)) mp$transcript<-as.vector(ex2tx[mp$exon]);
   if (length(tx2gn)) mp$gene<-as.vector(tx2gn[mp$transcript]);
   
