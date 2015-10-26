@@ -26,21 +26,21 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
     cat("Loading reads on chromosome", as.vector(seqnames(g))[1], '\n');
     if (paired) LoadGaPe(bam, g, min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
   }); 
-
+print(1);
   reads<-lapply(reads, function(rd) {
     if (length(rd[[1]])>0) {
       if (paired) {
         if (!identical(exons, NA)) {
-          rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn);
-          rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn);
+          rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn); print(2);
+          rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn); print(3);
         } 
       } else {
         if (!identical(exons, NA)) {
           rd$interval<-MapInterval2Exon(rd$interval, exons, 'within', strand.match, ex2tx, tx2gn);
         }
       }
-    }
-    rd$dumped<-MapInterval2Exon(ConvertGa2Gr(rd$dumped), exons, 'within', 0, ex2tx, tx2gn);
+    } print(4);
+    rd$dumped<-MapInterval2Exon(ConvertGa2Gr(rd$dumped), exons, 'within', 0, ex2tx, tx2gn); print(5);
     
     rd; 
   });
@@ -96,23 +96,22 @@ LoadGaPe<-function(bam, gr, min.mapq=1, wht=character(0)) {
   
   require("GenomicRanges");
   require("GenomicAlignments");
-  print(1);
+
   prm<-ScanBamParam(which=gr, what=wht, mapqFilter=min.mapq, flag=scanBamFlag(
     isPaired=TRUE,
     isUnmappedQuery=FALSE,
     hasUnmappedMate=FALSE,
     isNotPassingQualityControls=FALSE)); 
-  print(2);
+
   flushDumpedAlignments();
   reads<-readGAlignmentPairs(bam, use.names=TRUE, param=prm);
   dmp<-getDumpedAlignments();
-  print(3);
+  
   gr.fst<-ConvertGa2Gr(reads@first);
   gr.lst<-ConvertGa2Gr(reads@last);
   
-  print(4);
   loaded<-list(names=reads@NAMES, paired=TRUE, interval=list(first=gr.fst, last=gr.lst), dumped=dmp);
-  print(5);
+
   loaded;
 }
 
