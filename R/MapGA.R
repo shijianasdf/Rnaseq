@@ -26,20 +26,20 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
     cat("Loading reads on chromosome", as.vector(seqnames(g))[1], '\n');
     if (paired) LoadGaPe(bam, g, min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
   }); 
-print(1);
+
   reads<-lapply(reads, function(rd) {
     if (length(rd[[1]])>0) {
       if (paired) {
-        if (!identical(exons, NA)) { print(1);
-          rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn); print(2);
-          rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn); print(3);
+        if (!identical(exons, NA)) {
+          rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn); 
+          rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn); 
         } 
       } else {
         if (!identical(exons, NA)) {
           rd$interval<-MapInterval2Exon(rd$interval, exons, 'within', strand.match, ex2tx, tx2gn);
         }
       }
-    }; print(4);
+    }; 
     rd$dumped<-MapInterval2Exon(ConvertGa2Gr(rd$dumped), exons, 'within', 0, ex2tx, tx2gn); print(5);
     
     rd; 
@@ -58,17 +58,17 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
 
   require("GenomicRanges");
   require("GenomicAlignments");
-  
+  print(1);
   if (strand == 0) ig<-TRUE else ig<-FALSE;
   
   if (strand < 0) strand(exons)<-c('+'='-', '-'='+', '*'='*')[as.vector(strand(exons))];
-  
+  print(2);
   olap<-as.matrix(findOverlaps(intv, exons, type=type, ignore.strand=ig));
-  
+  print(3);
   mp<-intv[olap[, 1]];
   ex<-exons[olap[, 2]];
   mp$exon<-names(ex);
-  
+  print(4);
   mx<-rep(0, length(mp)); # max extension allowed by the boundary of exon
   ext<-mp$extension;
   str0<-as.vector(strand(mp));
@@ -84,7 +84,7 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
   mp$same.strand<-str0==str1;
   if (strand==-1) mp$same.strand<-!mp$same.strand;
   mp$max.extension<-mx;
-  
+  print(5);
   if (length(ex2tx)) mp$transcript<-as.vector(ex2tx[mp$exon]);
   if (length(tx2gn)) mp$gene<-as.vector(tx2gn[mp$transcript]);
   
