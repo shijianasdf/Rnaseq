@@ -1,10 +1,14 @@
 
 export("ConvertGa2Gr");
 export("ConvertSam2Bam");
+export("CountRead");
+export("GetGeneCount");
+export("GetUniqueMapping");
 export("LoadGa");
 export("LoadGaPe");
 export("LoadGaSe");
 export("MapInterval2Exon");
+export("MapRead2Feature");
 export("PlotLogScatter");
 export("RunStar");
 export("StarAlignment");

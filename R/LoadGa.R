@@ -1,4 +1,6 @@
-LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.mapq=1, strand.match=0) {
+# Load gapped aligned reads from BAM files
+# Optionally, annotate reads with exon, transcript and gene
+LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.mapq=1, strand.match=0, , wht=character(0)) {
   # bam             Full path to bam file
   # gr              GRanges object specifies regions or chromsomes; the whole bam file if NA
   # paired          Paired or single ended reads
@@ -24,7 +26,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
   # Loading reads
   reads<-lapply(gr, function(g) {
     cat("Loading reads on chromosome", as.vector(seqnames(g))[1], '\n');
-    if (paired) LoadGaPe(bam, g, min.mapq) else LoadGaSe(bam, gr[[nm]], min.mapq);
+    if (paired) LoadGaPe(bam, g, min.mapq, wht) else LoadGaSe(bam, gr[[nm]], min.mapq, wht);
   }); 
 
   reads<-lapply(reads, function(rd) {
