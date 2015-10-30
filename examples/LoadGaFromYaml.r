@@ -13,7 +13,7 @@ bam<-yaml$path.bam;
 out<-yaml$path.out;
 
 if (is.null(yaml$region)) gr<-NA else {
-  gr<-GRanges(names(yaml$region), IRanges(sapply(yaml$region, min), sapply(yaml$region, max)));
+  gr<-GRanges(names(yaml$region), IRanges(as.vector(sapply(yaml$region, min)), as.vector(sapply(yaml$region, max))));
 }
 
 paired<-yaml$paired;
