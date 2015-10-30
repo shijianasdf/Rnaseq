@@ -19,7 +19,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
   } 
 
   gr<-lapply(unique(as.vector(gr@seqnames@values)), function(c) gr[seqnames(gr)==c]);
-  names(gr)<-sapply(gr, function(gr) as.vector(seqnames(gr))[1]);
+  names(gr)<-sapply(gr, function(gr) as.vector(gr@seqnames@values)[1]);
 
   #ncore<-min(max.cluster, length(gr));
   
