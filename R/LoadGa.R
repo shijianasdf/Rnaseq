@@ -1,6 +1,6 @@
 # Load gapped aligned reads from BAM files
 # Optionally, annotate reads with exon, transcript and gene
-LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.mapq=1, strand.match=0, , wht=character(0)) {
+LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.mapq=1, strand.match=0, wht=character(0)) {
   # bam             Full path to bam file
   # gr              GRanges object specifies regions or chromsomes; the whole bam file if NA
   # paired          Paired or single ended reads
