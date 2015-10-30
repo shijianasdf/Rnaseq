@@ -25,7 +25,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
   
   # Loading reads
   reads<-lapply(gr, function(g) {
-    cat("Loading reads on chromosome", as.vector(seqnames(g))[1], '\n');
+    cat("Loading reads on chromosome", as.vector(g@seqnames@values)[1], '\n');
     if (paired) LoadGaPe(bam, g, min.mapq, wht) else LoadGaSe(bam, gr[[nm]], min.mapq, wht);
   }); 
 
