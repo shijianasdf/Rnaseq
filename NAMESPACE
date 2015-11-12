@@ -11,5 +11,6 @@ export("MapInterval2Exon");
 export("MapRead2Feature");
 export("PlotLogScatter");
 export("RunStar");
+export("SplitPairUnpaired");
 export("StarAlignment");
 
