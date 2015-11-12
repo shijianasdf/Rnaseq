@@ -13,6 +13,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
   require("GenomicAlignments");
   require("Rnaseq");
 
+  if (identical(gr, NA)) {
     chr<-scanBamHeader(bam)[[1]][[1]];
     gr<-GRanges(names(chr), IRanges(1, chr));
   } 
