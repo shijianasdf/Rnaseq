@@ -6,7 +6,7 @@ CountRead<-function(ga.list, feature=c('gene'), ncl=1, match.strand=0) {
   require("GenomicAlignments");
   require("Rnaseq");
   
-  if (class('ga.list') == 'character') {
+  if (class(ga.list) == 'character') {
     cat('Loading processed data of gapped alignment\n'); 
     ga.list<-readRDS(ga.list); 
   }
