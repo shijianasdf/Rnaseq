@@ -54,8 +54,8 @@ MapRead2Feature<-function(ga.list, feature, ncl=1, match.strand=0) {
   if (paired) { # PE
     mp.fst<-parallel::mclapply(ga.list, function(ga) GetUniqueMapping(ga[[3]][[1]], ga[[1]], feature,    match.strand), mc.cores = ncl);
     mp.lst<-parallel::mclapply(ga.list, function(ga) GetUniqueMapping(ga[[3]][[2]], ga[[1]], feature, -1*match.strand), mc.cores = ncl);
-    mp<-parallel::mclapply(list(mp.fst, mp.lst), function(lst) do.call('rbind', lst));
-    mp<-parallel::mclapply(mp, function(mp) lapply(split(mp[, 1], mp[, 2]), unique));
+    mp<-lapply(list(mp.fst, mp.lst), function(lst) do.call('rbind', lst));
+    mp<-lapply(mp, function(mp) lapply(split(mp[, 1], mp[, 2]), unique));
   } else { # SE
     mp<-parallel::mclapply(ga.list, function(ga) GetUniqueMapping(ga[[3]], ga[[1]], feature, match.strand), mc.cores = ncl);
     mp<-do.call('rbind', mp);
