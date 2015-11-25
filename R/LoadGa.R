@@ -52,12 +52,13 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
 }
 
 # Maping mapped read intervals to exons or other ungapped genomic features
-MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2gn=c()) {
+MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2gn=c(), keep=TRUE) {
   # intv    GRanges object, genomic intervals returned by the ConvertGa2Gr function
   # exons   GRanges object, location of exons or other ungapped genomic features; must have unique names
   # type    Type of overlapping, by default, mapping interval must be completely within exon
   # strand  Whether the overlapping should match strand; 0 no matrch, 1 must match, -1 must match reversely
-
+  # keep    Keep un-mapped intervals if TRUE
+  
   require("GenomicRanges");
   require("GenomicAlignments");
   
@@ -89,6 +90,17 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
   
   if (length(ex2tx)) mp$transcript<-as.vector(ex2tx[mp$exon]);
   if (length(tx2gn)) mp$gene<-as.vector(tx2gn[mp$transcript]);
+  
+  if (keep) {
+    unm<-intv[setdiff(1:length(intv), x@queryHits)];
+    unm$exon<-rep('', length(unm));
+    unm$same.strand<-rep(FALSE, length(unm));
+    unm$max.extension<-rep(0, length(unm));
+    unm$transcript<-rep('', length(unm));
+    unm$gene<-rep('', length(unm));
+    mp<-c(mp, unm);
+    mp<-mp[order(mp$read)];
+  }
   
   mp;
 }

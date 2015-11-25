@@ -197,3 +197,27 @@ GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
   list(count=c, mapping=grps);
 }
 
+# Combine multiple tables of counts
+CombineCounts<-function(fns, nms=names(fns)) {
+  # fns   File names
+  
+  cts<-lapply(fns, readRDS);
+  
+  rnm<-sort(unique(unlist(lapply(cts, rownames), use.names=FALSE))); 
+  cnm<-unique(unlist(lapply(cts, colnames), use.names=FALSE));
+  
+  c1<-lapply(cts, function(ct) {
+    mtrx<-matrix(0, nr=length(rnm), nc=length(cnm), dimnames=list(rnm, cnm)); 
+    for (i in 1:ncol(ct)) mtrx[rownames(ct), colnames(ct)]<-ct; 
+    mtrx; 
+  }); 
+  
+  ct<-lapply(cnm, function(nm) sapply(c1, function(c) c[, nm])); 
+  for (i in 1:length(ct)) colnames(ct[[i]])<-nms;
+  names(ct)<-cnm; 
+  
+  ct; 
+}
+
+
+
