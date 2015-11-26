@@ -208,7 +208,7 @@ CombineCounts<-function(fns, nms=names(fns)) {
   
   c1<-lapply(cts, function(ct) {
     mtrx<-matrix(0, nr=length(rnm), nc=length(cnm), dimnames=list(rnm, cnm)); 
-    for (i in 1:ncol(ct)) mtrx[rownames(ct), colnames(ct)]<-ct; 
+    mtrx[rownames(ct), colnames(ct)]<-ct; 
     mtrx; 
   }); 
   
