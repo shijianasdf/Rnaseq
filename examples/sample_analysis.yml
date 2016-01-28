@@ -1,0 +1,35 @@
+output: /nas/is1/zhangz/projects/mills/2015-12-CDLS_RNAseq/result/sample_analysis
+input:
+  read_count: /nas/is1/zhangz/projects/mills/2015-12-CDLS_RNAseq/r/count_entrez.rds
+  annotation: /nas/is1/zhangz/projects/mills/2015-12-CDLS_RNAseq/r/anno_entrez.rds
+  id_by_chr: /nas/is1/zhangz/projects/mills/2015-12-CDLS_RNAseq/r/id_by_chr.rds
+  gene_length: /nas/is1/zhangz/projects/mills/2015-12-CDLS_RNAseq/r/gene_length_entrez.rds
+  sample: /nas/is1/zhangz/projects/mills/2015-12-CDLS_RNAseq/r/sample.rds
+autosome:
+- '1'
+- '2'
+- '3'
+- '4'
+- '5'
+- '6'
+- '7'
+- '8'
+- '9'
+- '10'
+- '11'
+- '12'
+- '13'
+- '14'
+- '15'
+- '16'
+- '17'
+- '18'
+- '19'
+- '20'
+- '21'
+- '22'
+use_reads:
+  unique_only: yes
+  paired_only: yes
+  sense_only: yes
+
