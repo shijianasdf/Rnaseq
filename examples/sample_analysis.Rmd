@@ -92,9 +92,9 @@ fig.count<-fig.count+1;
 - `r length(ct.mean[ct.mean<1])` genes have less 1 read per sample mapped to them,
 - `r length(ct.mean[ct.mean<5])` genes have less 5 reads per sample mapped to them
 
-## Normalization
+## Sample classification
 
-Between-sample normalization was done by converting read counts of genes to FPKM (fragments per kilobase per million reads). 
+For all analyses in this section, between-sample normalization was first done by converting read counts of genes to FPKM (fragments per kilobase per million reads). 
 
 ```{r calculate_fpkm, include=FALSE}
 l <- gene.len[names(gene.len) %in% rownames(ct) & gene.len>0 & !is.na(gene.len)];
@@ -104,11 +104,7 @@ expr<-log2(fpkm+1);
 saveRDS(fpkm, file='fpkm.rds');
 ```
 
-## Sample classification
-
-- Gender prediction
-- Hierarchical clustering
-- Principal components analysis
+### Gender prediction
 
 ```{r gender_prediction, include=TRUE, fig.width=6, fig.height=6}
 by.chr<-lapply(id.by.chr[c('autosome', 'x', 'y')], function(id) id[id %in% rownames(expr)]);
@@ -126,10 +122,14 @@ if (length(by.chr[[2]])==0 | length(by.chr[[3]])==0) plot(0, type='n', axes=FALS
 title(main="Gender prediction based on X/Y genes")
 ```
 
+### Hierarchical clustering
+
 ```{r clustering, include=TRUE}
 plot(hclust(as.dist(1-cor(expr[by.chr[[1]], , drop=FALSE]))), xlab='', sub='', ylab='1 - correlation coefficient', main='Hierarchical clustering using all autosomal genes');
 fig.count<-fig.count+1;
 ```
+
+### Principal components analysis
 
 ```{r pca, include=TRUE, fig.width=6, fig.height=6}
 library(awsomics);
