@@ -1,5 +1,7 @@
 
 export("CombineCounts");
+export("CombineStarSj");
+export("CompareStarSj");
 export("ConvertGa2Gr");
 export("ConvertSam2Bam");
 export("CountRead");
@@ -8,10 +10,14 @@ export("GetUniqueMapping");
 export("LoadGa");
 export("LoadGaPe");
 export("LoadGaSe");
+export("LoadHTseq");
+export("LoadStarSj");
 export("MapInterval2Exon");
 export("MapRead2Feature");
+export("MergeStarSj");
 export("PlotLogScatter");
 export("RunStar");
 export("SplitPairUnpaired");
 export("StarAlignment");
+export("SummarizeStarSj");
 
