@@ -86,7 +86,7 @@ CombineStarSj<-function(fn.sj, output='./combined_SJ.out.tab', canonical.only=FA
   
   write.table(out, output, sep='\t', qu=FALSE, row.names=FALSE, col.names=FALSE); 
   
-  out<-list(summary=out, unique=nuni[rownames(out)], multiple=nmul, overhang=ovrh); 
+  out<-list(summary=out, unique=nuni, multiple=nmul, overhang=ovrh); 
   lapply(out[-1], function(x) x[ids, , drop=FALSE]); 
 }
 
