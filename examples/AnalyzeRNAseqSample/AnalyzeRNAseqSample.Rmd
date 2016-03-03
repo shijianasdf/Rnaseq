@@ -11,7 +11,7 @@ output:
 ```{r global_setup, include=FALSE}
 knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
-fn.yml<-"SampleAnalysis.yml"; 
+fn.yml<-"AnalyzeRNAseqSample.yml"; 
 conf <- yaml::yaml.load_file(fn.yml);
 
 fig.count<-0;
@@ -19,6 +19,9 @@ fig.count<-0;
 
 ```{r load_data, include=FALSE}
 path.out <- conf$output;
+if (identical(".", path.out) | is.null(path.out)) path.out<-getwd(); 
+if (!grepl('^/', path.out)) path.out<-paste(getwd(), path.out, sep='/'); 
+if (!file.exists(path.out)) dir.create(path.out, recursive = TRUE); 
 
 read.count.all<-readRDS(conf$input$read_count);
 anno<-readRDS(conf$input$annotation);
@@ -100,7 +103,7 @@ l <- gene.len[names(gene.len) %in% rownames(ct) & gene.len>0 & !is.na(gene.len)]
 c <- ct[rownames(ct) %in% names(l), ];
 fpkm<-apply(c, 2, function(x) x/(sum(x)/10^6)/(l[rownames(c)]/1000));
 expr<-log2(fpkm+1);
-saveRDS(fpkm, file='fpkm.rds');
+saveRDS(fpkm, file=paste(path.out, 'fpkm.rds', sep='/'));
 ```
 
 ### Gender prediction
