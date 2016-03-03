@@ -11,14 +11,13 @@ output:
 ```{r global_setup, include=FALSE}
 knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
-fn.yml<-"/nas/is1/zhangz/projects/mills/2015-12-CDLS_RNAseq/result/sample_analysis/rnaseq_sample.yml"; 
+fn.yml<-"SampleAnalysis.yml"; 
+conf <- yaml::yaml.load_file(fn.yml);
 
 fig.count<-0;
 ```
 
 ```{r load_data, include=FALSE}
-conf <- yaml::yaml.load_file(fn.yml);
-
 path.out <- conf$output;
 
 read.count.all<-readRDS(conf$input$read_count);

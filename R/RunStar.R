@@ -1,11 +1,17 @@
 # Run STAR based on inputs defined by a .yaml file
-RunStar<-function(fn.yaml, execute=FALSE, will.qsub=FALSE, qsub.path=c('/nas/is1', '/mnt/isilon/cbmi/variome')) {
+RunStar<-function(fn.yaml) {
   # fn.yaml   Name of the .yaml file defines the run inputs
-  # execute   Just save the shell script if FALSE; run STAR alignment if TRUE
-  # will.qsub Whether to execute with qsub. Generate script within a subfolder scripts if TRUE
   
   library(yaml);
   yaml<-yaml.load_file(fn.yaml);
+  
+  execute<-yaml$execute; # Just save the shell script if FALSE; run STAR alignment if TRUE
+  will.qsub<-yaml$qsub$will;  # Whether to execute with qsub. Generate script within a subfolder scripts if TRUE
+  qsub.path<-c(yaml$qsub$path$from, yaml$qsub$path$to); 
+  qsub.pre<-yaml$qsub$prefix;
+
+  # Combination of junction sites
+  junc<-yaml$junction
   
   # Input fastq files
   fastq<-yaml$fastq;
@@ -19,7 +25,7 @@ RunStar<-function(fn.yaml, execute=FALSE, will.qsub=FALSE, qsub.path=c('/nas/is1
   
   # other run options
   options<-yaml$options
-  options$twopassMode<-'None'; # Turn off the persample 2-pass mapping mode
+  options$twopassMode<-'None'; # Turn off the default persample 2-pass mapping mode
   
   # Pre-defined runnign mode requiring specific options
   n<-as.integer(yaml$pass[1]);
@@ -28,13 +34,13 @@ RunStar<-function(fn.yaml, execute=FALSE, will.qsub=FALSE, qsub.path=c('/nas/is1
   path.pass<-gsub('//', '/', path.pass);
   sapply(path.pass, function(path) if (!file.exists(path)) dir.create(path))->x; 
   
-  ######################################################################################################################################
-  ######################################################################################################################################
+  ############################################################################################################################################
+  ############################################################################################################################################
   # create command lines
   cmmd<-lapply(1:n, function(i) {
     lines<-lapply(nms, function(nm) {
       ln<-c('############', paste('#', nm), yaml$star);
-   
+      
       # Add fastq file(s)
       if (is.na(fastq[[nm]]$fastq2) | is.null(fastq[[nm]]$fastq2)) fn<-fastq[[nm]]$fastq1 else fn<-paste(fastq[[nm]]$fastq1, fastq[[nm]]$fastq2);
       ln<-c(ln, paste("--readFilesIn", fn));
@@ -48,42 +54,64 @@ RunStar<-function(fn.yaml, execute=FALSE, will.qsub=FALSE, qsub.path=c('/nas/is1
       
       # Add SJ files created by the last pass
       if (i > 1) {
-        fn.sj<-paste(path.pass[i-1], '/', nms, '_SJ.out.tab', sep='');
+        if (junc$combine) fn.sj<- paste(path.pass[i-1], junc$filename, sep='/') else 
+          fn.sj<-paste(path.pass[i-1], '/', nms, '_SJ.out.tab', sep='');
         ln<-c(ln, paste(c("--sjdbFileChrStartEnd", fn.sj), collapse=' '));
       }
       
       if (length(ln) > 3) ln[3:(length(ln)-1)]<-paste(ln[3:(length(ln)-1)], '\\');
       c(ln, '', '');
     });
-
+    writeLines(unlist(lines, use.names=FALSE), paste(path.pass[i], 'RunStar.sh', sep='/'));
+    
     ############################################################################################################################################
     # Prepare command for qsub run
     if (will.qsub) {
-      #path.qsub<-paste(path.pass[i], 'qsub', sep='/');
-      #if (!file.exists(path.qsub)) dir.create(path.qsub);
       names(lines)<-nms;
       fn<-sapply(nms, function(nm) {
         fn<-paste(path.pass[i], '/STAR_', nm, '.sh', sep='');
         l<-lines[[nm]]; 
         l<-gsub(qsub.path[1], qsub.path[2], l);
-        #ind<-grep("^--outFileNamePrefix ", l);
-        #if (length(ind)>0) l[ind]<-paste("--outFileNamePrefix ", path.pass[i], '/qsub/', nm, '_', sep='')
         writeLines(l, fn);
-        #paste(nm, 'sh', sep='.');
+        fn;
       });
-      #l<-paste(paste('qsub', fn), collapse='; ');
-      #writeLines(l, paste(path.qsub, 'qsub', sep='/'));
+      writeLines(paste(qsub.pre, sub(qsub.path[1], qsub.path[2], fn)), paste(path.pass[i], 'qsub.sh', sep='/')); 
     }
     ############################################################################################################################################
     
-    writeLines(unlist(lines, use.names=FALSE), paste(path.pass[i], 'RunStar.sh', sep='/'));
+    ############################################################################################################################################
+    # Prepare helper script
+    path.script<-paste(path.pass[i], 'script', sep='/');
+    if (!file.exists(path.script)) dir.create(path.script, recursive=TRUE);
+    fn.sam<-paste(path.pass[i], '/', nms, '_Aligned.out.sam',  sep=''); 
+    fn.sam<-sub(qsub.path[1], qsub.path[2], fn.sam);
+    writeLines(paste('rm', fn.sam), paste(path.script, 'delete_sam.sh', sep='/')); 
+    
+    fn.junc<-paste(path.pass[i], '/', nms, '_SJ.out.tab',  sep=''); 
+    fn.junc<-sub(qsub.path[1], qsub.path[2], fn.junc);
+    fn.junc<-paste('"', fn.junc, '"', sep=''); 
+    fn.junc<-paste('\t"', nms, '" = ', fn.junc, sep=''); 
+    lns<-paste(fn.junc, collapse=',\n');
+    lns<-c('fn.junc<-c(', lns, ');', '\n\nlibrary(Rnaseq);\n');  
+    if (i>1) junc$unannotated<-FALSE
+    l<-paste(c('canonical.only', 'unannotated.only', 'min.sample', 'min.unique', 'min.unique.total', 'min.overhang'), 
+             c(junc$canonical, junc$unannotated, junc$minimum$sample, junc$minimum$read, junc$minimum$total, junc$minimum$overhang), sep='=');
+    l<-paste(l, collapse=', '); 
+    l<-paste('"', paste(path.pass[i], junc$filename, sep='/'), '", ', l, sep=''); 
+    l<-paste('sj<-CombineStarSj(fn.junc, output=', l, ')', sep=''); 
+    lns<-c(lns, l); 
+    l<-paste('saveRDS(sj, "', paste(path.script, 'sj.rds', sep='/'), '")', sep=''); 
+    lns<-c(lns, l);
+    lns<-gsub(qsub.path[1], qsub.path[2], lns); 
+    writeLines(lns, paste(path.script, 'combined_junction.r', sep='/')); 
+    ############################################################################################################################################
     
     lines;
   });
   
-  names(cmmd)<-paste('pass', 1:length(cmmd), sep='');
   cmmd<-lapply(cmmd, function(cmmd) sapply(cmmd, function(cmmd) paste(cmmd[-(1:2)], collapse=' ')));
-  
+  names(cmmd)<-paste('pass', 1:length(cmmd), sep='');
+
   ############################################################################################################################################
   ############################################################################################################################################
   # Make the actual runs
@@ -111,7 +139,7 @@ RunStar<-function(fn.yaml, execute=FALSE, will.qsub=FALSE, qsub.path=c('/nas/is1
         if (i > 1) fn.sj<-paste(path.pass[i-1], '/', nms, '_SJ.out.tab', sep='') else fn.sj<-character();
         fn.sj<-fn.sj[!file.exists(fn.sj)];
         fn.req<-c(fn.req, fn.sj);
-
+        
         if (length(fn.req) > 0) {
           w<-warning("Required file(s) not exist: \n", paste(fn.req, collapse='\n'));
           cat(c('\n', '\n', date(), '\n', w), file=paste(yaml$output, 'RunStar.log', sep='/'), append=TRUE);
@@ -141,3 +169,4 @@ RunStar<-function(fn.yaml, execute=FALSE, will.qsub=FALSE, qsub.path=c('/nas/is1
   
   cmmd;
 }
+

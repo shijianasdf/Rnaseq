@@ -69,6 +69,7 @@ CombineStarSj<-function(fn.sj, output='./combined_SJ.out.tab', canonical.only=FA
     ev[rownames(t)]<-t[, 9];
     ev;
   }); 
+  max.ovrh<-apply(ovrh, 1, max); 
   
   colnames(nuni)<-colnames(nmul)<-colnames(ovrh)<-names(fn.sj); 
   
