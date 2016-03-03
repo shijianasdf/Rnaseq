@@ -106,11 +106,11 @@ GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
       dup<-rds %in% rds[duplicated(rds)]; 
     
       ############################################  
-      paired.unique<-split(rds[!dup], gns[!dup]); # both ends of a pair mapped to one and only one gene
+      if (length(rds)>0) paired.unique<-split(rds[!dup], gns[!dup]) else paired.unique<-list(); # both ends of a pair mapped to one and only one gene
       ############################################  
       
       ############################################  
-      paired.multiple<-split(rds[dup], gns[dup]); # both ends of a pair mapped to multiple genes
+      if (length(rds)>0) paired.multiple<-split(rds[dup], gns[dup]) else paired.multiple<-list(); # both ends of a pair mapped to multiple genes
       ############################################  
 
       claimed<-c(claimed, rds);
@@ -129,11 +129,11 @@ GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
       dup<-rds %in% rds[duplicated(rds)]; 
       
       ############################################  
-      paired.unique.anti<-split(rds[!dup], gns[!dup]); # both paired mapped to the antisense of one and only one gene
+      if (length(rds)>0) paired.unique.anti<-split(rds[!dup], gns[!dup]) else paired.unique.anti<-list(); # both paired mapped to the antisense of one and only one gene
       ############################################  
       
       ############################################  
-      paired.multiple.anti<-split(rds[dup], gns[dup]); # both paired mapped to the antisense of one and only one gene
+      if (length(rds)>0) paired.multiple.anti<-split(rds[dup], gns[dup]) else paired.multiple.anti<-list(); # both paired mapped to the antisense of one and only one gene
       ############################################  
       
       claimed<-c(claimed, rds);
@@ -147,11 +147,11 @@ GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
       dup<-rds %in% rds[duplicated(rds)];  
       
       ############################################  
-      unpaired.unique<-split(rds[!dup], gns[!dup]); # unpaired reads mapped to one and only one gene
+      if (length(rds)>0) unpaired.unique<-split(rds[!dup], gns[!dup]) else unpaired.unique<-list(); # unpaired reads mapped to one and only one gene
       ############################################  
       
       ############################################  
-      unpaired.multiple<-split(rds[dup], gns[dup]); # unpaired reads mapped to multiple genes
+      if (length(rds)>0) unpaired.multiple<-split(rds[dup], gns[dup]) else unpaired.multiple<-list(); # unpaired reads mapped to multiple genes
       ############################################  
       
       claimed<-c(claimed, rds);
@@ -165,11 +165,11 @@ GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
       dup<-rds %in% rds[duplicated(rds)]; 
       
       ############################################  
-      unpaired.unique.anti<-split(rds[!dup], gns[!dup]); # unpaired reads mapped to the antisense of one and only one gene
+      if (length(rds)>0) unpaired.unique.anti<-split(rds[!dup], gns[!dup]) else unpaired.unique.anti<-list(); # unpaired reads mapped to the antisense of one and only one gene
       ############################################  
       
       ############################################  
-      unpaired.multiple.anti<-split(rds[dup], gns[dup]); # unpaired reads mapped to the antisense of one and only one gene
+      if (length(rds)>0) unpaired.multiple.anti<-split(rds[dup], gns[dup]) else unpaired.multiple.anti<-list(); # unpaired reads mapped to the antisense of one and only one gene
       ############################################  
       
       claimed<-c(claimed, rds);
@@ -192,7 +192,7 @@ GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
   ct<-lapply(grps, function(gp) sapply(gp, length));
   gid<-sort(unique(unlist(lapply(ct, names), use.names=FALSE)));
   c<-matrix(0, nr=length(gid), nc=length(grps), dimnames = list(gid, names(grps)));
-  for (i in 1:length(grps)) c[names(ct[[i]]), i]<-ct[[i]];
+  for (i in 1:length(grps)) if (length(ct[[i]])>0) c[names(ct[[i]]), i]<-ct[[i]];
   
   list(count=c, mapping=grps);
 }
