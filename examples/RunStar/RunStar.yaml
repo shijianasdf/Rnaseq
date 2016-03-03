@@ -5,6 +5,9 @@
 ## STAR program location
 star: /mnt/isilon/cbmi/variome/rnaseq_workspace/tools/STAR-2.5.1b/bin/Linux_x86_64_static/STAR
 ############################################################################
+## SAMtools program location
+samtools: /mnt/isilon/cbmi/variome/bin/Samtools/samtools-1.2/samtools
+############################################################################
 ## Folder of output files
 output: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/star
 ############################################################################

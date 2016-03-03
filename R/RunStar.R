@@ -60,6 +60,11 @@ RunStar<-function(fn.yaml) {
       }
       
       if (length(ln) > 3) ln[3:(length(ln)-1)]<-paste(ln[3:(length(ln)-1)], '\\');
+      
+      if (i == n) {
+        l<-paste(yaml$samtools, 'index', paste(path.pass[i], '/', nm, '_Aligned.sortedByCoord.out.bam', sep='')); 
+        ln<-c(ln, '', l, '');
+      }
       c(ln, '', '');
     });
     writeLines(unlist(lines, use.names=FALSE), paste(path.pass[i], 'RunStar.sh', sep='/'));
