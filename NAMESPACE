@@ -17,6 +17,7 @@ export("MapRead2Feature");
 export("MergeStarSj");
 export("PlotLogScatter");
 export("RunStar");
+export("SplitGa");
 export("SplitPairUnpaired");
 export("StarAlignment");
 export("SummarizeStarSj");
