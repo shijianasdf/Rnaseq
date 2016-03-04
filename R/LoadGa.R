@@ -214,7 +214,7 @@ SplitGa<-function(ga, sep, level) {
   }); 
   
   ga.list<-lapply(names(grp), function(nm) {
-    cat(nm, '\n'); 
+    #cat(nm, '\n'); 
     ids<-grp[[nm]]; 
     ids.new<-1:length(ids);
     names(ids.new)<-ids;

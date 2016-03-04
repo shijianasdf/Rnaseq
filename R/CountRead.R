@@ -81,6 +81,7 @@ SplitPairUnpaired<-function(mapped1, mapped2) {
     list(paired=id0, unpaired=id1);
   });
   names(splt)<-gid; 
+  splt;
 }
 
 # Gene level read count
