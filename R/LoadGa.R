@@ -191,3 +191,42 @@ ConvertGa2Gr<-function(ga, read.length=max(qwidth(ga)), use.names=FALSE) {
   
   gr;
 }
+
+# Split loaded gapped alignment into read groups based on read IDs
+SplitGa<-function(ga, sep, level) {
+  # ga    Gapped alginment as loaded by the LoadGa function
+  # sep   Separator symbol in read id
+  # level Levels in read id to group reads; For example, when sep=':' and level=3, 
+  #       group ID of read "FCC7BBPACXX:1:1113:3906:59265#" is FCC7BBPACXX:1:1113 
+ 
+  # Grouping reads
+  id<-ga$names;
+  ind<-sapply(gregexpr(sep, id), function(x) x[level]); 
+  gp<-substr(id, 1, ind-1); 
+  rd<-1:length(id);
+  names(rd)<-id;
+  grp<-split(rd, gp); 
+  
+  # Split reads
+  intr<-lapply(ga$interval, function(x) {
+    g<-gp[x$read];
+    split(x, g);
+  }); 
+  
+  ga.list<-lapply(names(grp), function(nm) {
+    cat(nm, '\n'); 
+    ids<-grp[[nm]]; 
+    ids.new<-1:length(ids);
+    names(ids.new)<-ids;
+    g<-list(names=names(ids), paired=ga$paired);
+    it<-lapply(intr, function(x) x[[nm]]); 
+    g$interval<-lapply(it, function(x) {
+      x$read<-as.vector(ids.new[as.character(x$read)]);
+      x;
+    });
+    g;
+  });
+  names(ga.list)<-names(grp);
+  
+  ga.list;
+}

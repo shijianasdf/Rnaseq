@@ -62,6 +62,8 @@ MapRead2Feature<-function(ga.list, feature, ncl=1, match.strand=0) {
     mp<-lapply(split(mp[, 1], mp[, 2]), unique);
   }
   
+  names(mp)<-c('first', 'last'); 
+  
   mp;
 }
 
@@ -69,14 +71,16 @@ MapRead2Feature<-function(ga.list, feature, ncl=1, match.strand=0) {
 SplitPairUnpaired<-function(mapped1, mapped2) {
   # split paired end reads and unpaired ones
   gid<-sort(unique(c(names(mapped1), names(mapped2))));
+  gid<-gid[gid!='' & !is.na(gid)]; 
   pid<-cbind(mapped1[gid], mapped2[gid]);
-  apply(pid, 1, function(ids) {
+  splt<-apply(pid, 1, function(ids) {
     id<-ids[[1]]; 
     id0<-id[id %in% ids[[2]]]; 
     id1<-c(ids[[1]], ids[[2]]); 
     id1<-id1[!(id1 %in% id0)]; 
     list(paired=id0, unpaired=id1);
   });
+  names(splt)<-gid; 
 }
 
 # Gene level read count
@@ -192,7 +196,7 @@ GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
   ct<-lapply(grps, function(gp) sapply(gp, length));
   gid<-sort(unique(unlist(lapply(ct, names), use.names=FALSE)));
   c<-matrix(0, nr=length(gid), nc=length(grps), dimnames = list(gid, names(grps)));
-  for (i in 1:length(grps)) if (length(ct[[i]])>0) c[names(ct[[i]]), i]<-ct[[i]];
+  if (length(grps)>0) for (i in 1:length(grps)) if (length(ct[[i]])>0) c[names(ct[[i]]), i]<-ct[[i]];
   
   list(count=c, mapping=grps);
 }
