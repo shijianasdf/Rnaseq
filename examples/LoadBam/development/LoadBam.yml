@@ -1,0 +1,85 @@
+name: LPS2869
+bam: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/LPS2869_Aligned.sortedByCoord.out.bam
+output: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/r/load_bam
+exon: /mnt/isilon/cbmi/variome/rnaseq_workspace/refs/mm38/GRCm38_exon.rds
+paired: yes
+strand: -1.0
+mapq: 1
+feature: gene
+thread: 4
+split:
+  split: yes
+  separator: ':'
+  level: 3
+what:
+- flag
+- mapq
+- isize
+region:
+  NC_000067.6:
+  - 1.0
+  - 1.9547197e+07
+  NC_000068.7:
+  - 1.0
+  - 1.8211322e+07
+  NC_000069.6:
+  - 1.0
+  - 1.6003968e+07
+  NC_000070.6:
+  - 1.0
+  - 1.5650812e+07
+  NC_000071.6:
+  - 1.0
+  - 1.5183468e+07
+  NC_000072.6:
+  - 1.0
+  - 1.4973655e+07
+  NC_000073.6:
+  - 1.0
+  - 1.4544146e+07
+  NC_000074.6:
+  - 1.0
+  - 1.2940121e+07
+  NC_000075.6:
+  - 1.0
+  - 1.2459511e+07
+  NC_000076.6:
+  - 1.0
+  - 1.3069499e+07
+  NC_000077.6:
+  - 1.0
+  - 1.2208254e+07
+  NC_000078.6:
+  - 1.0
+  - 1.2012902e+07
+  NC_000079.6:
+  - 1.0
+  - 1.2042164e+07
+  NC_000080.6:
+  - 1.0
+  - 1.2490224e+07
+  NC_000081.6:
+  - 1.0
+  - 1.0404368e+07
+  NC_000082.6:
+  - 1.0
+  - 9820777.0
+  NC_000083.6:
+  - 1.0
+  - 9498727.0
+  NC_000084.6:
+  - 1.0
+  - 9070264.0
+  NC_000085.6:
+  - 1.0
+  - 6143157.0
+  NC_000086.7:
+  - 1.0
+  - 1.710313e+07
+  NC_000087.7:
+  - 1.0
+  - 9174470.0
+  NC_005089.1:
+  - 1.0
+  - 1630.0
+

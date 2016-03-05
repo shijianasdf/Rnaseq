@@ -71,6 +71,7 @@ LoadBam<-function(fn.yaml) {
     
     # Read count by read subgroups
     ct.all<-lapply(path.group, function(pth) {
+      cat('Count reads: ', pth, '\n');
       f<-dir(pth);
       f<-f[grep('_loaded.rds$', f)]; 
       fn<-paste(pth, f, sep='/'); 

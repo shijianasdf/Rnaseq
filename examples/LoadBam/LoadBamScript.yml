@@ -1,0 +1,126 @@
+output: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/r/load_bam
+exon: /mnt/isilon/cbmi/variome/rnaseq_workspace/refs/mm38/GRCm38_exon.rds
+paired: yes
+strand: -1.0
+mapq: 1
+feature: gene
+thread: 4
+split:
+  split: yes
+  separator: ':'
+  level: 3
+what:
+- flag
+- mapq
+- isize
+R: /home/zhangz/miniconda3/envs/zhangz/bin/Rscript
+qsub: qsub -cwd -l mem_free=64G -l h_vmem=64G -pe smp 16
+region:
+  NC_000067.6:
+  - 1.0
+  - 1.9547197e+08
+  NC_000068.7:
+  - 1.0
+  - 1.8211322e+08
+  NC_000069.6:
+  - 1.0
+  - 1.6003968e+08
+  NC_000070.6:
+  - 1.0
+  - 1.5650812e+08
+  NC_000071.6:
+  - 1.0
+  - 1.5183468e+08
+  NC_000072.6:
+  - 1.0
+  - 1.4973655e+08
+  NC_000073.6:
+  - 1.0
+  - 1.4544146e+08
+  NC_000074.6:
+  - 1.0
+  - 1.2940121e+08
+  NC_000075.6:
+  - 1.0
+  - 1.2459511e+08
+  NC_000076.6:
+  - 1.0
+  - 1.3069499e+08
+  NC_000077.6:
+  - 1.0
+  - 1.2208254e+08
+  NC_000078.6:
+  - 1.0
+  - 1.2012902e+08
+  NC_000079.6:
+  - 1.0
+  - 1.2042164e+08
+  NC_000080.6:
+  - 1.0
+  - 1.2490224e+08
+  NC_000081.6:
+  - 1.0
+  - 1.0404368e+08
+  NC_000082.6:
+  - 1.0
+  - 9.8207768e+07
+  NC_000083.6:
+  - 1.0
+  - 9.4987271e+07
+  NC_000084.6:
+  - 1.0
+  - 9.0702639e+07
+  NC_000085.6:
+  - 1.0
+  - 6.1431566e+07
+  NC_000086.7:
+  - 1.0
+  - 1.710313e+08
+  NC_000087.7:
+  - 1.0
+  - 9.1744698e+07
+  NC_005089.1:
+  - 1.0
+  - 16299.0
+bam:
+  2863C-L1F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2863C-L1F_Aligned.sortedByCoord.out.bam
+  2863C-L1FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2863C-L1FL_Aligned.sortedByCoord.out.bam
+  2863C-L2F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2863C-L2F_Aligned.sortedByCoord.out.bam
+  2863C-L2FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2863C-L2FL_Aligned.sortedByCoord.out.bam
+  2864C-L1M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2864C-L1M_Aligned.sortedByCoord.out.bam
+  2864C-L1ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2864C-L1ML_Aligned.sortedByCoord.out.bam
+  2864C-L2M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2864C-L2M_Aligned.sortedByCoord.out.bam
+  2864C-L2ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2864C-L2ML_Aligned.sortedByCoord.out.bam
+  2864C-L3F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2864C-L3F_Aligned.sortedByCoord.out.bam
+  2864C-L3FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2864C-L3FL_Aligned.sortedByCoord.out.bam
+  2865C-L1F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2865C-L1F_Aligned.sortedByCoord.out.bam
+  2865C-L1FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2865C-L1FL_Aligned.sortedByCoord.out.bam
+  2865C-L2M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2865C-L2M_Aligned.sortedByCoord.out.bam
+  2865C-L2ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2865C-L2ML_Aligned.sortedByCoord.out.bam
+  2866C-L1M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2866C-L1M_Aligned.sortedByCoord.out.bam
+  2866C-L1ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2866C-L1ML_Aligned.sortedByCoord.out.bam
+  2867LPS-L1M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2867LPS-L1M_Aligned.sortedByCoord.out.bam
+  2867LPS-L1ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2867LPS-L1ML_Aligned.sortedByCoord.out.bam
+  2867LPS-L2M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2867LPS-L2M_Aligned.sortedByCoord.out.bam
+  2867LPS-L2ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2867LPS-L2ML_Aligned.sortedByCoord.out.bam
+  2867LPS-R1F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2867LPS-R1F_Aligned.sortedByCoord.out.bam
+  2867LPS-R1FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2867LPS-R1FL_Aligned.sortedByCoord.out.bam
+  2868LPS-L2M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2868LPS-L2M_Aligned.sortedByCoord.out.bam
+  2868LPS-L2ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2868LPS-L2ML_Aligned.sortedByCoord.out.bam
+  2868LPS-R1F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2868LPS-R1F_Aligned.sortedByCoord.out.bam
+  2868LPS-R1FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2868LPS-R1FL_Aligned.sortedByCoord.out.bam
+  2870LPS-L1F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2870LPS-L1F_Aligned.sortedByCoord.out.bam
+  2870LPS-L1FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2870LPS-L1FL_Aligned.sortedByCoord.out.bam
+  2870LPS-L2F: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2870LPS-L2F_Aligned.sortedByCoord.out.bam
+  2870LPS-L2FL: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2870LPS-L2FL_Aligned.sortedByCoord.out.bam
+  2870LPS-R1M: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2870LPS-R1M_Aligned.sortedByCoord.out.bam
+  2870LPS-R1ML: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/2870LPS-R1ML_Aligned.sortedByCoord.out.bam
+  C2863: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/C2863_Aligned.sortedByCoord.out.bam
+  C2864: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/C2864_Aligned.sortedByCoord.out.bam
+  C2865: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/C2865_Aligned.sortedByCoord.out.bam
+  C2866: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/C2866_Aligned.sortedByCoord.out.bam
+  LPS2867: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/LPS2867_Aligned.sortedByCoord.out.bam
+  LPS2868: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/LPS2868_Aligned.sortedByCoord.out.bam
+  LPS2869: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/LPS2869_Aligned.sortedByCoord.out.bam
+  LPS2870: /mnt/isilon/cbmi/variome/zhangz/projects/simmons/2016-02_RNAseq/star/pass_2/LPS2870_Aligned.sortedByCoord.out.bam
+
