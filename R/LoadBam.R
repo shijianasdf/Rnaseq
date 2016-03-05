@@ -76,7 +76,9 @@ LoadBam<-function(fn.yaml) {
       fn<-paste(pth, f, sep='/'); 
       ga.list<-lapply(fn, readRDS); 
       names(ga.list)<-sub('_loaded.rds$', '', f); 
-      CountRead(ga.list, feature = yml$feature, ncl = yml$thread, match.strand = strand.match)[[1]][[1]];
+      ct<-CountRead(ga.list, feature = yml$feature, ncl = yml$thread, match.strand = strand.match)[[1]][[1]];
+      saveRDS(ct, paste(pth, 'count.rds', sep='/')); 
+      ct;
     });
     
     gid<-lapply(ct.all, rownames); 
@@ -87,6 +89,7 @@ LoadBam<-function(fn.yaml) {
       ct;
     });
     ct<-Reduce('+', ct.all);
+    saveRDS(ct, paste(path, 'count.rds', sep='/'));
   }
 
   ct;
