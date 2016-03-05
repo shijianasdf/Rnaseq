@@ -7,6 +7,7 @@ export("ConvertSam2Bam");
 export("CountRead");
 export("GetGeneCount");
 export("GetUniqueMapping");
+export("LoadBam");
 export("LoadGa");
 export("LoadGaPe");
 export("LoadGaSe");
