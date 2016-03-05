@@ -46,7 +46,7 @@ LoadBam<-function(fn.yaml) {
   if (!yml$split$split) {
     ga<-LoadGa(bam, gr, TRUE, exons, ex2tx, tx2gn, min.mapq, strand.match);
     saveRDS(ga, paste(path, 'loaded.rds', sep='/'));
-    ct<-CountRead(ga, feature = yml$feature, ncl = 4, match.strand = strand.match);
+    ct<-CountRead(ga, feature = yml$feature, ncl = yml$thread, match.strand = strand.match);
     saveRDS(ct, paste(path, 'count.rds', sep='/'));
   } else { # Split reads when BAM is too big or other reasons
     # Individual chromosomes
@@ -76,7 +76,7 @@ LoadBam<-function(fn.yaml) {
       fn<-paste(pth, f, sep='/'); 
       ga.list<-lapply(fn, readRDS); 
       names(ga.list)<-sub('_loaded.rds$', '', f); 
-      CountRead(ga.list, feature = yml$feature, ncl = 4, match.strand = strand.match)[[1]][[1]];
+      CountRead(ga.list, feature = yml$feature, ncl = yml$thread, match.strand = strand.match)[[1]][[1]];
     });
     
     gid<-lapply(ct.all, rownames); 
