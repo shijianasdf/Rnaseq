@@ -1,12 +1,13 @@
 # This is a function to load a BAM files and maps reads to known genes
 # It uses specifications given in a yaml file
 # Loaded reads will be mapped to genes
+
 LoadBam<-function(fn.yaml) {
-  
-  
+
   # read in the .yml file
   # fn.yaml<-'LoadBam.yml';
   yml<-yaml::yaml.load_file(fn.yaml);
+  cat("Loading", yml$name, '\n'); 
   
   require("GenomicRanges");
   require("GenomicAlignments");
@@ -38,13 +39,15 @@ LoadBam<-function(fn.yaml) {
   # Exon to gene mapping
   if ("gene_id" %in% cnm & "transcript_id" %in% cnm) {
     tx2gn<-as.vector(exons$gene_id);
+    ind<-which(is.na(ex2tx));
+    exons$transcript_id[ind]<-ex2tx[ind]<-tx2gn[ind];
     names(tx2gn)<-as.vector(exons$transcript_id);
     tx2gn<-tx2gn[!duplicated(names(tx2gn))];
   } else tx2gn<-NA;
   
   # Loading/writing
   if (!yml$split$split) {
-    ga<-LoadGa(bam, gr, TRUE, exons, ex2tx, tx2gn, min.mapq, strand.match);
+    ga<-LoadGa(bam, gr, TRUE, exons, ex2tx, tx2gn, min.mapq, strand.match, wht);
     saveRDS(ga, paste(path, 'loaded.rds', sep='/'));
     ct<-CountRead(ga, feature = yml$feature, ncl = yml$thread, match.strand = strand.match);
     saveRDS(ct, paste(path, 'count.rds', sep='/'));
@@ -56,7 +59,7 @@ LoadBam<-function(fn.yaml) {
     # Load reads by chromosome and by read subgroups
     path.group<-lapply(chr, function(c) { # Load a chromosome
       g<-gr[as.vector(seqnames(gr))==c];
-      ga<-LoadGa(bam, g, TRUE, exons, ex2tx, tx2gn, min.mapq, strand.match)[[1]];
+      ga<-LoadGa(bam, g, TRUE, exons, ex2tx, tx2gn, min.mapq, strand.match, wht)[[1]];
       saveRDS(ga, paste(path, paste(c, '_loaded.rds', sep=''), sep='/'));
       ga.list<-SplitGa(ga, sep=yml$split$separator, level=yml$split$level); 
       path.group<-sapply(names(ga.list), function(nm) {cat(nm, '\n'); 

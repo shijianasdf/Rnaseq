@@ -17,6 +17,10 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
     chr<-scanBamHeader(bam)[[1]][[1]];
     gr<-GRanges(names(chr), IRanges(1, chr));
   } 
+  
+  tx2gn<-tx2gn[!is.na(tx2gn)];
+  tx2gn<-tx2gn[!is.na(names(tx2gn))]; 
+  ex2tx<-ex2tx[!is.na(ex2tx)];
 
   gr<-lapply(unique(as.vector(gr@seqnames@values)), function(c) gr[seqnames(gr)==c]);
   names(gr)<-sapply(gr, function(gr) as.vector(gr@seqnames@values)[1]);
