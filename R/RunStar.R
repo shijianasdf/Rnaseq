@@ -172,6 +172,24 @@ RunStar<-function(fn.yaml) {
     } # End of for (i in 1:length(log))
   }
   
+  # Prepare yaml file for summarizing STAR alignment
+  yml.smm<-yaml[c('star', 'samtools', 'output', 'pass', 'junction', 'qsub', 'options')]; 
+  yml.smm$file<-lapply(names(fastq), function(nm) {
+    list(fastq=fastq[[nm]], 
+         bam=paste(path, paste('pass', n, sep='_'), paste(nm, '_Aligned.sortedByCoord.out.bam', sep=''), sep='/'),
+         log=paste(path, paste('pass', n, sep='_'), paste(nm, '_Log.final.out', sep=''), sep='/'))
+  }); 
+  names(yml.smm$file)<-names(fastq);
+  writeLines(as.yaml(yml.smm), paste(path, 'SummarizeStar.yml', sep='/')); 
+  
   cmmd;
+}
+
+
+# Summarize log of STAR outputs of a set of RNA-seq libraries
+SummarizeStar<-function(fn.log) {
+  # fn.log  Path and name of a set of log files from STAR runs
+  
+  
 }
 
