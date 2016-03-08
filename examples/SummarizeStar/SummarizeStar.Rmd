@@ -98,6 +98,25 @@ STAR Parameters:
 
 `r lns`
 
+# Summary statistics
+
+```{r summary_statistics, include=TRUE}
+stat<-cbind(
+  "Total input, million reads" = round(as.numeric(gsub(',', '', tbls[[1]][, 5]))/10^6, 2),
+  "Alignment rate (%), unique mapping" = tbls[[3]][, 2], 
+  "Alignment rate (%), unique + multiple" = tbls[[3]][, 2] + tbls[[3]][, 4], 
+  "Mismatch rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 1])),
+  "Deletion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 2])),
+  "Insertion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 3])),
+  "Too many loci (%)" = as.numeric(sub('%', '', tbls[[6]][, 1])),
+  "Too many mismatch (%)" = as.numeric(sub('%', '', tbls[[6]][, 2])),
+  "Too short (%)" = as.numeric(sub('%', '', tbls[[6]][, 3]))
+)
+smm<-apply(stat, 2, summary); 
+```
+
+`r kable(t(smm))`
+
 
 # Figures
 
