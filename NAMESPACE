@@ -5,6 +5,7 @@ export("CompareStarSj");
 export("ConvertGa2Gr");
 export("ConvertSam2Bam");
 export("CountRead");
+export("CreateStarReport");
 export("GetGeneCount");
 export("GetUniqueMapping");
 export("LoadBam");
