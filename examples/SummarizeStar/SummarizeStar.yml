@@ -1,3 +1,4 @@
+template: https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/SummarizeStar/SummarizeStar.Rmd
 star: /mnt/isilon/cbmi/variome/rnaseq_workspace/tools/STAR-2.5.1b/bin/Linux_x86_64_static/STAR
 samtools: /mnt/isilon/cbmi/variome/bin/Samtools/samtools-1.2/samtools
 output: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/star

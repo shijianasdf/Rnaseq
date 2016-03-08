@@ -173,7 +173,9 @@ RunStar<-function(fn.yaml) {
   }
   
   # Prepare yaml file for summarizing STAR alignment
-  yml.smm<-yaml[c('star', 'samtools', 'output', 'pass', 'junction', 'qsub', 'options')]; 
+  if (!is.null(yaml$template)) yml.smm<-list(template=yaml$template) else 
+    yml.smm<-list(template="https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/SummarizeStar/SummarizeStar.Rmd") 
+  yml.smm<-c(yml.smm, yaml[c('star', 'samtools', 'output', 'pass', 'junction', 'qsub', 'options')]); 
   yml.smm$file<-lapply(names(fastq), function(nm) {
     list(fastq=fastq[[nm]], 
          bam=paste(path, paste('pass', n, sep='_'), paste(nm, '_Aligned.sortedByCoord.out.bam', sep=''), sep='/'),
@@ -187,9 +189,32 @@ RunStar<-function(fn.yaml) {
 
 
 # Summarize log of STAR outputs of a set of RNA-seq libraries
-SummarizeStar<-function(fn.log) {
-  # fn.log  Path and name of a set of log files from STAR runs
+CreateStarReport<-function(yml) {
+  # yml     The yaml file or an yaml list defines the STAR runs
   
+  if (class(yml) == 'character') {
+    if (!file.exists(yml)) stop('Input file', yml, 'not found\n'); 
+    yml <- yaml::yaml.load_file(yml);  
+  }
   
+  library(knitr);
+  library(rmarkdown); 
+  
+  if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE)
+  fn.html<-paste(yml$output, 'SummarizeStar.html', sep='/'); 
+  fn.temp<-paste(yml$output, 'SummarizeStar.Rmd', sep='/'); 
+  
+  if (grepl('^http', yml$template)) {
+    writeLines(RCurl::getURL(yml$template)[[1]], fn.temp);
+  } else {
+    file.copy(yml$input$template, fn.temp); 
+  }
+  
+  errors<-try(rmarkdown::render(fn.temp, output_format="html_document", output_file='SummarizeStar.html', output_dir=yml$output, 
+                                quiet=TRUE, envir=new.env()), silent=TRUE);
+  
+  writeLines(yaml::as.yaml(yml), paste(yml$output, 'SummarizeStar.yml', sep='/'));   
+  
+  list(index=fn.html, error=errors);
 }
 
