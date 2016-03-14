@@ -5,7 +5,7 @@
 # Define variable fn.yaml before running this script
 ####################################################
 library(yaml);
-yml<-yaml.load_file(fn.yaml);
+yml<-yaml.load_file("LoadBamScript.yml");
 
 path<-yml$output;
 if (!file.exists(path)) dir.create(path, recursive = TRUE);

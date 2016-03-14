@@ -32,12 +32,17 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
     cat("Loading reads on chromosome", as.vector(g@seqnames@values)[1], '\n');
     if (paired) LoadGaPe(bam, g, min.mapq, wht) else LoadGaSe(bam, gr[[nm]], min.mapq, wht);
   }); 
+  
+  N<-sapply(reads, function(x) length(x[[1]])); 
+  cat("Loaded a total of", sum(N), 'reads mapped to', length(reads), 'chromosomes\n');
 
   reads<-lapply(reads, function(rd) {
     if (length(rd[[1]])>0) {
       if (paired) {
         if (!identical(exons, NA)) {
+          cat("Mapping reads to sense strand of exons\n")
           rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn); 
+          cat("Mapping reads to antisense strand of exons\n")
           rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn); 
         } 
       } else {
@@ -121,10 +126,12 @@ LoadGaPe<-function(bam, gr, min.mapq=1, wht=character(0)) {
     hasUnmappedMate=FALSE,
     isNotPassingQualityControls=FALSE)); 
 
+  cat("Loading gapped alignment pairs from", bam, '\n');
   flushDumpedAlignments();
   reads<-readGAlignmentPairs(bam, use.names=TRUE, param=prm);
   dmp<-getDumpedAlignments();
   
+  cat("Converting loaded reads to GRanges object\n");
   gr.fst<-ConvertGa2Gr(reads@first);
   gr.lst<-ConvertGa2Gr(reads@last);
   

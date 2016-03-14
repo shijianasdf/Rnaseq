@@ -25,9 +25,6 @@ autosome:
 - '17'
 - '18'
 - '19'
-- '20'
-- '21'
-- '22'
 use_reads:
   unique_only: yes
   paired_only: yes
