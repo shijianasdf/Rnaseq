@@ -43,7 +43,7 @@ LoadGa<-function(bam, gr=NA, paired=TRUE, exons=NA, ex2tx=c(), tx2gn=c(), min.ma
         if (!identical(exons, NA)) {
           cat("Mapping", length(rd[[3]][[1]]), "reads to sense strand of exons\n")
           if (length(rd$interval[[1]])>0) rd$interval[[1]]<-MapInterval2Exon(rd$interval[[1]], exons, 'within', strand.match, ex2tx, tx2gn); 
-          cat("Mapping", length(rd[[3]][[1]]), "reads to antisense strand of exons\n")
+          cat("Mapping", length(rd[[3]][[2]]), "reads to antisense strand of exons\n")
           if (length(rd$interval[[2]])>0) rd$interval[[2]]<-MapInterval2Exon(rd$interval[[2]], exons, 'within', -1*strand.match, ex2tx, tx2gn); 
         } 
       } else {
