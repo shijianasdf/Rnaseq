@@ -6,6 +6,7 @@ output:
   html_document:
     toc: yes
     fig_caption: yes
+    toc_float: true
 ---
 
 ```{r global_setup, include=FALSE}

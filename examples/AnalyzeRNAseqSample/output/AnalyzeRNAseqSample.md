@@ -12,6 +12,8 @@ output:
 
 
 
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Krantz_lab/iPSC_CdLS)_**</div>
+
 ## Summary
 
 
@@ -35,6 +37,8 @@ output:
 - 2412 genes have 0 read mapped to them,
 - 5426 genes have less 1 read per sample mapped to them,
 - 7429 genes have less 5 reads per sample mapped to them
+
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Krantz_lab/iPSC_CdLS)_**</div>
 
 ## Sample classification
 
@@ -65,6 +69,8 @@ Same PCA plot color-coded by different sample attributes:
 - [CdLS](PCA_CdLS.pdf)
 
 
+
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Krantz_lab/iPSC_CdLS)_**</div>
 
 ## Per sample statistics
 
