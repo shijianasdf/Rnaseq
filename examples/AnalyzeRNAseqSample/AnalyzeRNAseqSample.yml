@@ -1,10 +1,12 @@
-output: 
+template: https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/AnalyzeRNAseqSample/AnalyzeRNAseqSample.Rmd
+home: http://mybic.chop.edu/labs/Krantz_lab/iPSC_CdLS
+output: /home/zhangz/R/source/Rnaseq/examples/AnalyzeRNAseqSample/output
 input:
-  read_count: input/count_entrez.rds
-  annotation: input/anno_entrez.rds
-  id_by_chr: input/id_by_chr.rds
-  gene_length: input/gene_length_entrez.rds
-  sample: input/sample.rds
+  read_count: /home/zhangz/R/source/Rnaseq/examples/AnalyzeRNAseqSample/input/count_entrez.rds
+  annotation: /home/zhangz/R/source/Rnaseq/examples/AnalyzeRNAseqSample/input/anno_entrez.rds
+  id_by_chr: /home/zhangz/R/source/Rnaseq/examples/AnalyzeRNAseqSample/input/id_by_chr.rds
+  gene_length: /home/zhangz/R/source/Rnaseq/examples/AnalyzeRNAseqSample/input/gene_length_entrez.rds
+  sample: /home/zhangz/R/source/Rnaseq/examples/AnalyzeRNAseqSample/input/sample.rds
 autosome:
 - '1'
 - '2'

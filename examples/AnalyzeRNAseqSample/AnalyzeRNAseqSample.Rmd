@@ -33,6 +33,8 @@ read.count.all<-read.count.all[, rownames(smpl)];
 names(id.by.chr)<-tolower(names(id.by.chr));
 ```
 
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
 ## Summary
 ```{r summary, include=FALSE}
 if (class(read.count.all) == 'list') {
@@ -93,6 +95,8 @@ fig.count<-fig.count+1;
 - `r length(ct.mean[ct.mean==0])` genes have 0 read mapped to them,
 - `r length(ct.mean[ct.mean<1])` genes have less 1 read per sample mapped to them,
 - `r length(ct.mean[ct.mean<5])` genes have less 5 reads per sample mapped to them
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
 
 ## Sample classification
 
@@ -164,6 +168,8 @@ summ<-cbind(Total_Million_Reads=round(ttl, 3), Mean_chrX=round(mx, 4), Mean_chrY
             No_Read_Genes=apply(ct, 2, function(c) length(c[c==0])), round(pca$x[, 1:3], 3));
 awsomics::CreateDatatable(summ, paste(path.out, 'sample_summary.html', sep='/'), caption='Sample summary');
 ```
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
 
 ## Per sample statistics
 

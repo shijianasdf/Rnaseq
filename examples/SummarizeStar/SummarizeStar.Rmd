@@ -213,3 +213,4 @@ barplot(t(x), las=3, names.arg=names(yml$file), ylab='Percentage of total reads 
 
 ***
 _END OF DOCUMENT_
+
