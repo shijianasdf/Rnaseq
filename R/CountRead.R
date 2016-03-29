@@ -11,6 +11,9 @@ CountRead<-function(ga.list, feature=c('gene'), ncl=1, match.strand=0) {
     ga.list<-readRDS(ga.list); 
   }
   
+  n<-sapply(ga.list, function(ga) length(ga[[1]])); 
+  ga.list<-ga.list[n>0]; 
+  
   feature<-tolower(feature);
   
   ct<-list();
@@ -29,14 +32,16 @@ GetUniqueMapping<-function(gr, read.name, feature, match.strand=0) {
   require("GenomicAlignments");
   require("Rnaseq");
   
-  if (!feature %in% names(elementMetadata(gr))) matrix(nr=0, nc=2) else {
-    df<-cbind(read.name[gr$read], as.vector(elementMetadata(gr)[, feature])); 
-    
-    if (match.strand<0) df<-df[!gr$same.strand, , drop=FALSE] else 
-      if (match.strand>0) df<-df[gr$same.strand, , drop=FALSE]
-    
-    df<-df[!duplicated(df), , drop=FALSE];
-    df;
+  if (class(gr) != 'GRanges') matrix(nr=0, nc=2) else {
+    if (!feature %in% names(elementMetadata(gr))) matrix(nr=0, nc=2) else {
+      df<-cbind(read.name[gr$read], as.vector(elementMetadata(gr)[, feature])); 
+      
+      if (match.strand<0) df<-df[!gr$same.strand, , drop=FALSE] else 
+        if (match.strand>0) df<-df[gr$same.strand, , drop=FALSE]
+        
+        df<-df[!duplicated(df), , drop=FALSE];
+        df;
+    }
   }
 }
 
@@ -46,6 +51,9 @@ MapRead2Feature<-function(ga.list, feature, ncl=1, match.strand=0) {
   require("GenomicRanges");
   require("GenomicAlignments");
   require("Rnaseq");
+  
+  n<-sapply(ga.list, function(x) length(x[[1]])); 
+  ga.list<-ga.list[n>0]; 
 
   paired<-ga.list[[1]]$paired;
   
@@ -87,6 +95,9 @@ SplitPairUnpaired<-function(mapped1, mapped2) {
 # Gene level read count
 GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
 
+  n<-apply(ga.list, function(x) length(x[[1]])); 
+  ga.list<-ga.list[n>0]; 
+  
   paired<-ga.list[[1]]$paired;
   
   ##############################################################

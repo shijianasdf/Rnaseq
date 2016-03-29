@@ -6,6 +6,7 @@ output:
   html_document:
     fig_caption: yes
     toc: yes
+    toc_float: true
 ---
 
 ```{r global_setup, include=FALSE}
@@ -84,6 +85,8 @@ tbls<-parseLogs(fn.log);
 tbls<-lapply(tbls, as.matrix); 
 ```
 
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
 # Introduction
 
 This report is a summary of STAR runs on a RNA-seq data set. It uses information provided by the *_Log.final.out file generated from each STAR run. 
@@ -97,6 +100,8 @@ This report is a summary of STAR runs on a RNA-seq data set. It uses information
 STAR Parameters:
 
 `r lns`
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
 
 # Summary statistics
 
@@ -117,6 +122,7 @@ smm<-apply(stat, 2, summary);
 
 `r kable(t(smm))`
 
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
 
 # Figures
 
@@ -175,6 +181,8 @@ par(mar=c(8,5,2,2));
 barplot(t(x), las=3, names.arg=names(yml$file), ylab='Percentage of total reads (%)', cex.lab=1.5, legend=colnames(x)); 
 ```
 
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
 # Tables
 
 ## Run information
@@ -211,6 +219,9 @@ barplot(t(x), las=3, names.arg=names(yml$file), ylab='Percentage of total reads 
 
 `r kable(as.matrix(tbls[[6]]), align=rep('c', ncol(tbls[[6]])))`
 
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
 ***
 _END OF DOCUMENT_
+
 

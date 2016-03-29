@@ -1,4 +1,5 @@
 template: https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/SummarizeStar/SummarizeStar.Rmd
+home: http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS
 star: /mnt/isilon/cbmi/variome/rnaseq_workspace/tools/STAR-2.5.1b/bin/Linux_x86_64_static/STAR
 samtools: /mnt/isilon/cbmi/variome/bin/Samtools/samtools-1.2/samtools
 output: /home/zhangz/R/source/Rnaseq/examples/SummarizeStar/output

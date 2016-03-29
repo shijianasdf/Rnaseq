@@ -6,11 +6,14 @@ output:
   html_document:
     fig_caption: yes
     toc: yes
+    toc_float: true
 ---
 
 
 
 
+
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS)_**</div>
 
 # Introduction
 
@@ -40,6 +43,8 @@ STAR Parameters:
   - alignIntronMax = 1000000
   - alignMatesGapMax = 1000000
 
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS)_**</div>
+
 # Summary statistics
 
 
@@ -60,6 +65,7 @@ STAR Parameters:
 
 
 
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS)_**</div>
 
 # Figures
 
@@ -92,6 +98,8 @@ Percentage of mismatches and INDELs
 Outlier reads: mapped to too many loci, too many mismatches, too short, and others
 
 ![plot of chunk unmapped_outlier](figure/unmapped_outlier-1.png) 
+
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS)_**</div>
 
 # Tables
 
@@ -399,6 +407,9 @@ Outlier reads: mapped to too many loci, too many mismatches, too short, and othe
 
 
 
+<div align='right'>**_[Go back to project home](http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS)_**</div>
+
 ***
 _END OF DOCUMENT_
+
 

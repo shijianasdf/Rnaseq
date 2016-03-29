@@ -45,9 +45,11 @@ LoadBam<-function(fn.yaml) {
     tx2gn<-tx2gn[!duplicated(names(tx2gn))];
   } else tx2gn<-NA;
   
+  if (yml$antisense) str<-0 else str<-strand.match
+  
   # Loading/writing
   if (!yml$split$split) {
-    ga<-LoadGa(bam, gr, TRUE, exons, ex2tx, tx2gn, min.mapq, strand.match, wht);
+    ga<-LoadGa(bam, gr, TRUE, exons, ex2tx, tx2gn, min.mapq, str, wht);
     saveRDS(ga, paste(path, 'loaded.rds', sep='/'));
     ct<-CountRead(ga, feature = yml$feature, ncl = yml$thread, match.strand = strand.match);
     saveRDS(ct, paste(path, 'count.rds', sep='/'));
@@ -59,7 +61,7 @@ LoadBam<-function(fn.yaml) {
     # Load reads by chromosome and by read subgroups
     path.group<-lapply(chr, function(c) { # Load a chromosome
       g<-gr[as.vector(seqnames(gr))==c];
-      ga<-LoadGa(bam, g, TRUE, exons, ex2tx, tx2gn, min.mapq, strand.match, wht)[[1]];
+      ga<-LoadGa(bam, g, TRUE, exons, ex2tx, tx2gn, min.mapq, str, wht)[[1]];
       saveRDS(ga, paste(path, paste(c, '_loaded.rds', sep=''), sep='/'));
       ga.list<-SplitGa(ga, sep=yml$split$separator, level=yml$split$level); 
       path.group<-sapply(names(ga.list), function(nm) {cat(nm, '\n'); 
