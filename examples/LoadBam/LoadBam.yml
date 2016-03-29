@@ -1,22 +1,30 @@
-# Generate a set of yml file and script to load individual BAM files
+##### input/output
+name: '31693'   # Sample name, to be used as name of sub-folder withint the output folder
+bam: /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31693_Aligned.sortedByCoord.out.bam
 output: /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/r/load_bam
-exon: /nas/is1/rnaseq_workspace/refs/dm6/dm6_exon.rds
-paired: yes
-strand: -1.0
-antisense: yes
-mapq: 1
-feature: gene
-thread: 4
+# GRanges object of exon information
+# Require 2 elementMetadata: transcript_id and gene_id, if mapping reads to genes
+exon: /nas/is1/rnaseq_workspace/refs/dm6/dm6_exon.rds       
+##### library features
+paired: yes         # Paired end reads?
+strand: -1.0        # Use -1 for common RNA-seq library protocol, 0 if the libraries weren't stranded
+antisense: yes      # Also map reads to antisense strand of exons?
+mapq: 1             # Minimal mapping quality score, remove reads with smaller scores
+feature: gene       # Currently only support 'gene'
+##### runtime options
+thread: 4           # Number of threads for parallel computing
 split:
-  split: no
-  separator: ':'
-  level: 3
-what:
+  split: no         # Split reads by their IDs? Use 'yes' when the BAM file is large
+  separator: ':'    # The separator of syllabus in read IDs
+  level: 3          # The number of syllabuses in read IDs to be used to group reads
+what:               # The SAM fields to be imported
 - flag
 - mapq
 - isize
-R: /home/zhangz/miniconda3/envs/zhangz/bin/Rscript
-qsub: qsub -cwd -l mem_free=64G -l h_vmem=64G -pe smp 16
+##### qsub options
+R: /home/zhangz/miniconda3/envs/zhangz/bin/Rscript            # R path
+qsub: qsub -cwd -l mem_free=64G -l h_vmem=64G -pe smp 16      # qsub command
+##### chromosome to be loaded and their length
 region:
   NC_004354.4:
   - 1.0
@@ -5628,14 +5636,4 @@ region:
   NC_024511.2:
   - 1.0
   - 19524.0
-bam:
-  '31692': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31692_Aligned.sortedByCoord.out.bam
-  '31693': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31693_Aligned.sortedByCoord.out.bam
-  '31694': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31694_Aligned.sortedByCoord.out.bam
-  '31695': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31695_Aligned.sortedByCoord.out.bam
-  '31696': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31696_Aligned.sortedByCoord.out.bam
-  '31697': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31697_Aligned.sortedByCoord.out.bam
-  '31698': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31698_Aligned.sortedByCoord.out.bam
-  '31699': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31699_Aligned.sortedByCoord.out.bam
-  '31700': /nas/is1/zhangz/projects/krantz/2016_03_CdLS_Fly_RNAseq/star/pass_2/31700_Aligned.sortedByCoord.out.bam
 

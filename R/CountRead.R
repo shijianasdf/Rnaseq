@@ -95,7 +95,7 @@ SplitPairUnpaired<-function(mapped1, mapped2) {
 # Gene level read count
 GetGeneCount<-function(ga.list, ncl=1, match.strand=0) {
 
-  n<-apply(ga.list, function(x) length(x[[1]])); 
+  n<-sapply(ga.list, function(x) length(x[[1]])); 
   ga.list<-ga.list[n>0]; 
   
   paired<-ga.list[[1]]$paired;
