@@ -25,7 +25,7 @@ saveRDS(cov, 'test1.rds');
     dep<-cov[region[ct>0]]; 
  saveRDS(dep, 'test2.rds');    
     d<-split(dep, rep(1:ceiling(length(dep)/10000), each=10000)[1:length(dep)]); 
-    if (length(d)==1) m<-mean(dep) else {
+    if (length(d)==1) m<-sapply(dep, mean) else {
       m<-parallel::mclapply(d, mean, mc.cores=min(8, length(d))); 
       saveRDS(m, 'test3.rds');
       m<-unlist(lapply(m, as.vector), use.names=FALSE); 
