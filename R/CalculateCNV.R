@@ -20,17 +20,13 @@ CalculateCopy<-function(cnv, region, copy=elementMetadata(cnv)[, 1], keep.all=TR
   cp<-rep(2, length(region)); 
   
   cov<-coverage(cnv, weight=copy); 
-saveRDS(cov, 'test1.rds'); 
   if (any(ct>0)) {
     dep<-cov[region[ct>0]]; 
- saveRDS(dep, 'test2.rds');    
     d<-split(dep, rep(1:ceiling(length(dep)/10000), each=10000)[1:length(dep)]); 
-    if (length(d)==1) m<-sapply(dep, mean) else {
-      m<-parallel::mclapply(d, mean, mc.cores=min(8, length(d))); 
-      saveRDS(m, 'test3.rds');
-      m<-unlist(lapply(m, as.vector), use.names=FALSE); 
-      saveRDS(m, 'test4.rds');
-    }
+
+    m<-parallel::mclapply(d, function(d) sapply(d, mean), mc.cores=min(8, length(d))); 
+    m<-unlist(lapply(m, as.vector), use.names=FALSE); 
+
     cp[ct>0]<-m;
   }
   
