@@ -1,4 +1,6 @@
 
+export("CalculateCopy");
+export("CalculateCopyTx");
 export("CombineCounts");
 export("CombineStarSj");
 export("CompareStarSj");
