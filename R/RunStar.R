@@ -184,7 +184,7 @@ RunStar<-function(fn.yaml) {
   names(yml.smm$file)<-names(fastq);
   path.summ<-paste(path, 'summarize_star', sep='/'); 
   if (!file.exists(path.summ)) dir.create(path.summ, recursive = TRUE); 
-  yml$output<-path.summ;
+  yml.smm$output<-path.summ;
   writeLines(as.yaml(yml.smm), paste(path.summ, 'summarize_star.yml', sep='/')); 
   
   cmmd;
