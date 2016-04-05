@@ -182,7 +182,7 @@ RunStar<-function(fn.yaml) {
          log=paste(path, paste('pass', n, sep='_'), paste(nm, '_Log.final.out', sep=''), sep='/'))
   }); 
   names(yml.smm$file)<-names(fastq);
-  writeLines(as.yaml(yml.smm), paste(path, 'SummarizeStar.yml', sep='/')); 
+  writeLines(as.yaml(yml.smm), paste(path, 'summarize_star/summarize_star.yml', sep='/')); 
   
   cmmd;
 }
