@@ -174,7 +174,7 @@ RunStar<-function(fn.yaml) {
   
   # Prepare yaml file for summarizing STAR alignment
   if (!is.null(yaml$template)) yml.smm<-list(template=yaml$template) else 
-    yml.smm<-list(template="https://raw.githubusercontent.com/zhezhangsh/Rnaseq/master/examples/SummarizeStar/SummarizeStar.Rmd") 
+    yml.smm<-list(template="https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/rnaseq/summarize_star/summarize_star.Rmd") 
   yml.smm<-c(yml.smm, yaml[c('star', 'samtools', 'output', 'pass', 'junction', 'qsub', 'options')]); 
   yml.smm$file<-lapply(names(fastq), function(nm) {
     list(fastq=fastq[[nm]], 
