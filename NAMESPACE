@@ -19,6 +19,7 @@ export("LoadStarSj");
 export("MapInterval2Exon");
 export("MapRead2Feature");
 export("MergeStarSj");
+export("NormalizeRNAseq");
 export("PlotLogScatter");
 export("RunStar");
 export("SplitGa");
