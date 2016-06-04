@@ -17,7 +17,7 @@ NormalizeRNAseq <- function(cnt, len=NA, methods=c("NormTotalCount", "NormMedian
     d <- log(cnt+1); 
     d <- NormLoess(d); 
     d[d<0] <- 0; 
-    norm$Loess <- d;
+    norm$Loess <- exp(d);
   }
   
   norm <- lapply(norm, round); 
