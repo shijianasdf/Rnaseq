@@ -15,8 +15,9 @@ NormalizeRNAseq <- function(cnt, len=NA, methods=c("NormTotalCount", "NormMedian
   if ("NormTPM" %in% methods & length(len)==nrow(cnt)) norm$TPM <- NormTPM(cnt, len); 
   if ("NormLoess" %in% methods) {
     d <- log(cnt+1); 
-    d <- NormLoess(d); 
-    d[d<1] <- 1; 
+    d <- exp(NormLoess(d))-1; 
+    d <- round(d); 
+    d[d<0] <- 0;
     norm$Loess <- round(exp(d)-1);
   }
   
