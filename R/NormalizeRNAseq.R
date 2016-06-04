@@ -4,10 +4,10 @@ NormalizeRNAseq <- function(cnt, len=NA, methods=c("NormTotalCount", "NormMedian
   
   norm <- list(Original=cnt); 
   
-  if ("NormTotalCount" %in% methods) norm$TotalCount <- NormTotalCount(cnt); 
+  if ("NormTotalCount" %in% methods) norm$Total_Count <- NormTotalCount(cnt); 
   if ("NormMedian" %in% methods) norm$Median <- NormMedian(cnt); 
-  if ("NormQQ" %in% methods) norm$QuantileQuantile <- NormMedian(cnt, ref='median'); 
-  if ("NormUpperQuantile" %in% methods) norm$UpperQuantile <- NormUpperQuantile(cnt); 
+  if ("NormQQ" %in% methods) norm$Quantile_Quantile <- NormMedian(cnt, ref='median'); 
+  if ("NormUpperQuantile" %in% methods) norm$Upper_Quantile <- NormUpperQuantile(cnt); 
   if ("NormRLE" %in% methods) norm$edgeR_RLE <- NormRLE(cnt); 
   if ("NormTMM" %in% methods) norm$edgeR_TMM <- NormTMM(cnt); 
   if ("NormDESeq" %in% methods) norm$DESeq <- NormDESeq(cnt); 
