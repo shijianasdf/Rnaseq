@@ -8,8 +8,8 @@ NormalizeRNAseq <- function(cnt, len=NA, methods=c("NormTotalCount", "NormMedian
   if ("NormMedian" %in% methods) norm$Median <- NormMedian(cnt); 
   if ("NormQQ" %in% methods) norm$QuantileQuantile <- NormMedian(cnt, ref='median'); 
   if ("NormUpperQuantile" %in% methods) norm$UpperQuantile <- NormUpperQuantile(cnt); 
-  if ("NormRLE" %in% methods) norm$RelativeLog <- NormRLE(cnt); 
-  if ("NormTMM" %in% methods) norm$TrimmedMean <- NormTMM(cnt); 
+  if ("NormRLE" %in% methods) norm$edgeR_RLE <- NormRLE(cnt); 
+  if ("NormTMM" %in% methods) norm$edgeR_TMM <- NormTMM(cnt); 
   if ("NormDESeq" %in% methods) norm$DESeq <- NormDESeq(cnt); 
   if ("NormFPKM" %in% methods & length(len)==nrow(cnt)) norm$FPKM <- NormFPKM(cnt, len); 
   if ("NormTPM" %in% methods & length(len)==nrow(cnt)) norm$TPM <- NormTPM(cnt, len); 
