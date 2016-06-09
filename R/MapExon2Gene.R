@@ -1,8 +1,9 @@
 # Map exons to genes and generate annotation table of genes
-MapExon2Gene <- function(gr, cnm.tx, cnm.gn) {
-  # gr      GRanges object of all exons, with elementMetadata specifying the transcript and gene each exon belongs to
-  # cnm.tx  Column name of the transcripts
-  # cnm.gn  Column name of the genes
+MapExon2Gene <- function(gr, cnm.tx, cnm.gn, extra.column=TRUE) {
+  # gr            GRanges object of all exons, with elementMetadata specifying the transcript and gene each exon belongs to
+  # cnm.tx        Column name of the transcripts
+  # cnm.gn        Column name of the genes
+  # extra.column  Whether to add extra annotation columns based on the given element metadata
   
   require("GenomicRanges");
   
@@ -51,6 +52,27 @@ MapExon2Gene <- function(gr, cnm.tx, cnm.gn) {
   rownames(anno) <- gn.id;
   
   mp.all <- split(tx2ex[mp.tx], mp.gn); 
+  
+  # Add extra annotation columns
+  if (extra.column) {
+    meta0 <- as.data.frame(meta[, !(colnames(meta) %in% c(cnm.tx, cnm.gn)), drop=FALSE]); 
+    mp0 <- lapply(names(meta0), function(nm) split(gn, as.vector(meta0[, nm]))); 
+    names(mp0) <- names(meta0); 
+    n <- sapply(mp0, length); 
+    mp0 <- mp0[n>1 & n<=1.05*nrow(anno)]; 
+    if (length(mp0) > 0) {
+      anno0 <- sapply(mp0, function(x) {
+        x <- lapply(x, unique); 
+        y <- unlist(x, use.names=FALSE); 
+        z <- rep(names(x), sapply(x, length)); 
+        a <- sapply(split(z, y), function(a) paste(unique(a), collapse=';')); 
+        a <- a[rownames(anno)]; 
+        a[is.na(a)] <- ""; 
+        as.vector(a); 
+      }); 
+      anno <- cbind(anno, anno0); 
+    }
+  }
   
   list(gene=anno, transcript=list(length=tx.len, chromosome=tx.chr), mapping=mp.all); 
 }
