@@ -18,6 +18,7 @@ export("LoadHTseq");
 export("LoadStarSj");
 export("MapInterval2Exon");
 export("MapRead2Feature");
+export("MapExon2Gene");
 export("MergeStarSj");
 export("NormalizeRNAseq");
 export("PlotLogScatter");
