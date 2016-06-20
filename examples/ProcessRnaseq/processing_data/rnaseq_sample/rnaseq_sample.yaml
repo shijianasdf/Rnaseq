@@ -1,0 +1,52 @@
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_sample/rnaseq_sample.Rmd
+output: /result/rnaseq_sample
+home: http://mybic.chop.edu/labs/sullivank/RNAseq_SLE_BTM_2/
+analyst: Jim Zhang
+zip: yes
+description:
+  project: RNA-seq experiments of controls vs. SLE patients in immune cells
+  experiment: RNA-seq libraries of B cells, T cells and monocytes. Each immune cells
+    include 6 samples, 3 from healthy controls and 3 from SLE patients. RNA-seq data
+    is 100bp pair-ended reads generated from Illumina HiSeq sequencer. The goal is
+    to common and cell-specific differential expression between controls and patients
+    in 3 cell types.
+input:
+  count:
+    Unique_Paired_Sense: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/count_unique.rds
+    Multiple_Paired_Sense: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/count_multiple.rds
+    Unique_Unpaired_Sense: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/count_unpaired_unique.rds
+    Multiple_Unpaired_Sense: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/count_unpaired_multiple.rds
+  annotation: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/anno.rds
+  sample: /mnt/isilon/cbmi/variome/zhangz/projects/sullivan/2016-06_RNAseq_B_M_T/r/sample.rds
+parameter:
+  annotation:
+    chromosome: 1.0
+    length: 2.0
+  chromosome:
+    f: chrX
+    m: chrY
+    autosome:
+    - chr1
+    - chr2
+    - chr3
+    - chr4
+    - chr5
+    - chr6
+    - chr7
+    - chr8
+    - chr9
+    - chr10
+    - chr11
+    - chr12
+    - chr13
+    - chr14
+    - chr15
+    - chr16
+    - chr17
+    - chr18
+    - chr19
+    - chr20
+    - chr21
+    - chr22
+    - chrM
+

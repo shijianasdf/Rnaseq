@@ -1,0 +1,252 @@
+---
+# Copy this file to the folder to make the STAR run and edit it to make run options
+
+############################################################################
+analyst: Jim Zhang
+home: http://mybic.chop.edu/labs/sullivank/RNAseq_SLE_BTM_2/
+description:
+  project: "RNA-seq experiments of controls vs. SLE patients in immune cells"
+  experiment: "RNA-seq libraries of B cells, T cells and monocytes. 
+              Each immune cells include 6 samples, 3 from healthy controls and 3 from SLE patients.
+              RNA-seq data is 100bp pair-ended reads generated from Illumina HiSeq sequencer.
+              The goal is to common and cell-specific differential expression between controls and patients in 3 cell types."
+
+############################################################################
+## Folder of output files
+output: ./processing_data
+## Folder of analysis results
+result: /result
+## STAR program location
+star: /mnt/isilon/cbmi/variome/rnaseq_workspace/tools/STAR-STAR_2.4.1c/bin/Linux_x86_64_static/STAR
+## Reference genome, compiled for STAR
+genome: /mnt/isilon/cbmi/variome/rnaseq_workspace/refs/hg38/star
+## Reference transcriptome, as a .gtf/.gff file
+transcriptome: /mnt/isilon/cbmi/variome/rnaseq_workspace/refs/hg38/genes.gtf
+## All exons, generated from the .gtf/.gff file
+exon: /mnt/isilon/cbmi/variome/rnaseq_workspace/refs/hg38/hg38_exon.rds
+## Gene set collections
+geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/human.rds
+## Sample description
+sample: /mnt/isilon/cbmi/variome/zhangz/projects/sullivan/2016-06_RNAseq_B_M_T/r/sample.rds
+## Sample groups for outlier analysis
+group: /mnt/isilon/cbmi/variome/zhangz/projects/sullivan/2016-06_RNAseq_B_M_T/r/cell2sample.rds
+## prefix of qsub command line to run STAR
+qsub: qsub -cwd -l mem_free=64G -l h_vmem=64G -pe smp 16
+## Number of pass(es) to run STAR
+pass: 2
+## YAML file for summarizing STAR runs
+summarize: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/summarize_star/summarize_star.yaml
+## Samtools location
+samtools: /mnt/isilon/cbmi/variome/bin/Samtools/samtools-1.2/samtools
+## R location
+R: Rscript
+
+############################################################################
+## Parameters for batch analysis
+batch:    
+  interest:         # One or more sample features in the <sample> table that were variable(s) of interest in this study
+  - Group
+  batch:            # One sample feature in the <sample> table that is the known source of batch effect; empty if not known
+  nsv: 5            # Number of surogate variables to estimate when running the sva() function
+  iteration: 20     # Number of iterations when running the irwsva algorithm implemented in the sva() function
+  anova: 0.01       # Cutoff of ANOVA p value indicating the significance of correlation between sample features and surrogate variables
+
+############################################################################
+## Parameters for outlier analysis
+outlier: 
+  min.n: 4.0        ## Minimal number of replicated samples in each group for outlier detection
+  max.corr: 0.96    ## Maximal mean correlation coefficient for a sample to be outlier
+  n.sd: 3.0         ## Number of standard deviations less than the mean of correlation coefficients of non-outlier samples
+  cut.corr: 0.5     ## Cutoff of correlation coefficent of outlier/non-outlier differential expression between a pair of outliers to determin they had similar quality issue
+  difference:       ## Criteria to select outlier/non-outlier top genes
+    mean: 2.0         ## Minimal difference between outlier and the mean of non-outliers
+    nsd: 2.0          ## Minimal number of standard deviations
+    min: 100.0        ## Minimal number of top genes to be selected (the nsd requirement must also be met, so the final number could be smaller)
+    max: 250.0        ## Maximal number of tog genes to be selected
+
+############################################################################
+## STAR alignment options
+# Based on ENCODE default (see STAR manual) 
+alignment:
+  runThreadN: 8
+  readFilesCommand: zcat
+  outSAMtype: SAM # other options: BAM SortedByCoordinate
+  chimSegmentMin: 32
+  outFilterType: BySJout
+  outFilterMultimapNmax: 20
+  alignSJoverhangMin: 8
+  alignSJDBoverhangMin: 1
+  outFilterMismatchNmax: 999
+  outFilterMismatchNoverLmax: 0.04
+  alignIntronMin: 20
+  alignIntronMax: 1000000
+  alignMatesGapMax: 1000000
+  # Options for novel junction sites
+  junction:
+    combine: yes
+    filename: combined_SJ.out.tab
+    canonical: no
+    unannotated: yes
+    minimum:
+      read: 3
+      overhang: 5
+      sample: 2
+      total: 10
+
+############################################################################
+# Load BAM file into R
+load:
+  paired: yes
+  strand: -1.0
+  antisense: no
+  mapq: 10
+  feature: gene
+  thread: 4
+  split:
+    split: no
+    separator: ':'
+    level: 3
+  what:
+  - flag
+  - mapq
+  - isize
+  female: chrX
+  male: chrY
+  region:
+    chr1:
+    - 1.0
+    - 2.4895642e+08
+    chr2:
+    - 1.0
+    - 2.4219353e+08
+    chr3:
+    - 1.0
+    - 1.9829556e+08
+    chr4:
+    - 1.0
+    - 1.9021456e+08
+    chr5:
+    - 1.0
+    - 1.8153826e+08
+    chr6:
+    - 1.0
+    - 1.7080598e+08
+    chr7:
+    - 1.0
+    - 1.5934597e+08
+    chr8:
+    - 1.0
+    - 1.4513864e+08
+    chr9:
+    - 1.0
+    - 1.3839472e+08
+    chr10:
+    - 1.0
+    - 1.3379742e+08
+    chr11:
+    - 1.0
+    - 1.3508662e+08
+    chr12:
+    - 1.0
+    - 1.3327531e+08
+    chr13:
+    - 1.0
+    - 1.1436433e+08
+    chr14:
+    - 1.0
+    - 1.0704372e+08
+    chr15:
+    - 1.0
+    - 1.0199119e+08
+    chr16:
+    - 1.0
+    - 9.0338345e+07
+    chr17:
+    - 1.0
+    - 8.3257441e+07
+    chr18:
+    - 1.0
+    - 8.0373285e+07
+    chr19:
+    - 1.0
+    - 5.8617616e+07
+    chr20:
+    - 1.0
+    - 6.4444167e+07
+    chr21:
+    - 1.0
+    - 4.6709983e+07
+    chr22:
+    - 1.0
+    - 5.0818468e+07
+    chrX:
+    - 1.0
+    - 1.560409e+08
+    chrY:
+    - 1.0
+    - 5.7227415e+07
+    chrM:
+    - 1.0
+    - 16569.0
+
+############################################################################
+############################################################################
+## Full path to fastq file
+# One or multiple samples, with unique sample names. 
+# The names will be used as prefix in output files
+fastq:
+   ND410-B :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND410-B_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND410-B_2.fq.gz
+   ND410-M :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND410-M_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND410-M_2.fq.gz
+   ND410-T :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND410-T_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND410-T_2.fq.gz
+   ND422-B :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND422-B_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND422-B_2.fq.gz
+   ND422-M :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND422-M_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND422-M_2.fq.gz
+   ND422-T :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND422-T_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND422-T_2.fq.gz
+   ND426-B :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1603011/ND426-B4_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1603011/ND426-B4_2.fq.gz
+   ND430-M :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND430-M_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/ND430-M_2.fq.gz
+   ND426-T :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1603011/ND426-T2_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1603011/ND426-T2_2.fq.gz
+   SLE1077-B :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1077-B_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1077-B_2.fq.gz
+   SLE1077-M :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1077-M_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1077-M_2.fq.gz
+   SLE1077-T :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1077-T_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1077-T_2.fq.gz
+   SLE1169-B :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1169-B_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1169-B_2.fq.gz
+   SLE1169-M :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1169-M_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1169-M_2.fq.gz
+   SLE1169-T :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1169-T_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE1169-T_2.fq.gz
+   SLE985-B :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE985-B_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE985-B_2.fq.gz
+   SLE985-M :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE985-M_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE985-M_2.fq.gz
+   SLE985-T :
+    fastq1: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE985-T_1.fq.gz
+    fastq2: /mnt/isilon/cbmi/variome/BGI/CPF1505009/SLE985-T_2.fq.gz
+

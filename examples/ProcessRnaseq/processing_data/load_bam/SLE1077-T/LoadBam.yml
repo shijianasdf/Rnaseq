@@ -1,0 +1,97 @@
+name: SLE1077-T
+output: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam
+bam: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/pass_2/SLE1077-T_Aligned.sortedByCoord.out.bam
+exon: /mnt/isilon/cbmi/variome/rnaseq_workspace/refs/hg38/hg38_exon.rds
+paired: yes
+strand: -1.0
+antisense: no
+mapq: 10
+feature: gene
+thread: 4
+split:
+  split: no
+  separator: ':'
+  level: 3
+what:
+- flag
+- mapq
+- isize
+female: chrX
+male: chrY
+region:
+  chr1:
+  - 1.0
+  - 2.4895642e+08
+  chr2:
+  - 1.0
+  - 2.4219353e+08
+  chr3:
+  - 1.0
+  - 1.9829556e+08
+  chr4:
+  - 1.0
+  - 1.9021456e+08
+  chr5:
+  - 1.0
+  - 1.8153826e+08
+  chr6:
+  - 1.0
+  - 1.7080598e+08
+  chr7:
+  - 1.0
+  - 1.5934597e+08
+  chr8:
+  - 1.0
+  - 1.4513864e+08
+  chr9:
+  - 1.0
+  - 1.3839472e+08
+  chr10:
+  - 1.0
+  - 1.3379742e+08
+  chr11:
+  - 1.0
+  - 1.3508662e+08
+  chr12:
+  - 1.0
+  - 1.3327531e+08
+  chr13:
+  - 1.0
+  - 1.1436433e+08
+  chr14:
+  - 1.0
+  - 1.0704372e+08
+  chr15:
+  - 1.0
+  - 1.0199119e+08
+  chr16:
+  - 1.0
+  - 9.0338345e+07
+  chr17:
+  - 1.0
+  - 8.3257441e+07
+  chr18:
+  - 1.0
+  - 8.0373285e+07
+  chr19:
+  - 1.0
+  - 5.8617616e+07
+  chr20:
+  - 1.0
+  - 6.4444167e+07
+  chr21:
+  - 1.0
+  - 4.6709983e+07
+  chr22:
+  - 1.0
+  - 5.0818468e+07
+  chrX:
+  - 1.0
+  - 1.560409e+08
+  chrY:
+  - 1.0
+  - 5.7227415e+07
+  chrM:
+  - 1.0
+  - 16569.0
+

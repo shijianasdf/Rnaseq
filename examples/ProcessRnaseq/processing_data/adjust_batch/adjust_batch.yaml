@@ -1,0 +1,22 @@
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/adjust_batch/adjust_batch.Rmd
+output: /result/adjust_batch
+home: http://mybic.chop.edu/labs/sullivank/RNAseq_SLE_BTM_2/
+analyst: Jim Zhang
+zip: yes
+description:
+  project: RNA-seq experiments of controls vs. SLE patients in immune cells
+  experiment: RNA-seq libraries of B cells, T cells and monocytes. Each immune cells
+    include 6 samples, 3 from healthy controls and 3 from SLE patients. RNA-seq data
+    is 100bp pair-ended reads generated from Illumina HiSeq sequencer. The goal is
+    to common and cell-specific differential expression between controls and patients
+    in 3 cell types.
+input:
+  matrix: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/normalized.rds
+  sample: /mnt/isilon/cbmi/variome/zhangz/projects/sullivan/2016-06_RNAseq_B_M_T/r/sample.rds
+parameter:
+  interest: Group
+  batch: ~
+  nsv: 5
+  iteration: 20
+  anova: 0.01
+

@@ -1,0 +1,28 @@
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/identify_outlier/identify_outlier.Rmd
+output: /result/identify_outlier
+home: http://mybic.chop.edu/labs/sullivank/RNAseq_SLE_BTM_2/
+analyst: Jim Zhang
+zip: yes
+description:
+  project: RNA-seq experiments of controls vs. SLE patients in immune cells
+  experiment: RNA-seq libraries of B cells, T cells and monocytes. Each immune cells
+    include 6 samples, 3 from healthy controls and 3 from SLE patients. RNA-seq data
+    is 100bp pair-ended reads generated from Illumina HiSeq sequencer. The goal is
+    to common and cell-specific differential expression between controls and patients
+    in 3 cell types.
+input:
+  data: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/normalized.rds
+  annotation: /home/zhangz/R/source/Rnaseq/examples/ProcessRnaseq/./processing_data/load_bam/anno.rds
+  group: /mnt/isilon/cbmi/variome/zhangz/projects/sullivan/2016-06_RNAseq_B_M_T/r/cell2sample.rds
+  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/human.rds
+parameter:
+  min.n: 4.0
+  max.corr: 0.96
+  n.sd: 3.0
+  cut.corr: 0.5
+  difference:
+    mean: 2.0
+    nsd: 2.0
+    min: 100.0
+    max: 250.0
+
