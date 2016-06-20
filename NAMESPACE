@@ -22,6 +22,7 @@ export("MapExon2Gene");
 export("MergeStarSj");
 export("NormalizeRNAseq");
 export("PlotLogScatter");
+export("ProcessRnaseq");
 export("RunStar");
 export("SplitGa");
 export("SplitPairUnpaired");

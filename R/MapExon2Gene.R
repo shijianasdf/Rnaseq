@@ -56,7 +56,12 @@ MapExon2Gene <- function(gr, cnm.tx, cnm.gn, extra.column=TRUE) {
   # Add extra annotation columns
   if (extra.column) {
     meta0 <- as.data.frame(meta[, !(colnames(meta) %in% c(cnm.tx, cnm.gn)), drop=FALSE]); 
-    mp0 <- lapply(names(meta0), function(nm) split(gn, as.vector(meta0[, nm]))); 
+    mp0 <- lapply(names(meta0), function(nm) {
+      x <- meta0[[nm]]; 
+      n <- sapply(x, length); 
+      x <- as.vector(unlist(x)); 
+      split(rep(gn, n), x); 
+    }); 
     names(mp0) <- names(meta0); 
     n <- sapply(mp0, length); 
     mp0 <- mp0[n>1 & n<=1.05*nrow(anno)]; 
