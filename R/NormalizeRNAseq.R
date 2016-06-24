@@ -1,6 +1,6 @@
 # Normalize a read count matrix from RNA-seq
 NormalizeRNAseq <- function(cnt, len=NA,  methods=c("NormTotalCount", "NormMedian", "NormQQ", "NormUpperQuantile", "NormRLE", 
-                                                   "NormTMM", "NormDESeq", "NormLoess", "NormFPKM", "NormTPM")) {
+                                                   "NormTMM", "NormDESeq", "NormLoess", "NormCyclicLoess", "NormFPKM", "NormTPM")) {
   
   normLog <- function(mthd, mtrx) {
     sz <- sum(rowMeans(mtrx+1)/10^6); 
