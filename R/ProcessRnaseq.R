@@ -11,7 +11,7 @@ ProcessRnaseq <- function(fn.yaml) {
   if (!file.exists(path)) dir.create(path, recursive=TRUE);
 
   # Combination of junction sites
-  junc<-yaml$alignment$junction
+  junc<-yaml$junction
   
   # Input fastq files
   fastq<-yaml$fastq;
