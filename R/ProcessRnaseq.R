@@ -161,7 +161,7 @@ ProcessRnaseq <- function(fn.yaml) {
     lns <- c(paste('##', nm), 'require("GenomicRanges");', 'require("GenomicAlignments");', 'require("Rnaseq");', '');
     lns <- c(lns, paste('fn.yaml <- ("', fn.yml, '");', sep=''));
     lns <- c(lns, 'ct<-LoadBam(fn.yaml);', '');
-    lns <- c(lns, paste('saveRDS(ct[[1]][[1]],', paste(pth, 'just_count.rds', sep='/'))); 
+    lns <- c(lns, paste('saveRDS(ct[[1]][[1]], "', paste(pth, 'just_count.rds"', sep='/'))); 
 
     writeLines(as.yaml(yml), fn.yml); 
     writeLines(paste(yaml$R, fn.r), fn.sh); 
