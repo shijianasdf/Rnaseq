@@ -63,16 +63,19 @@ LoadBam<-function(fn.yaml) {
       g<-gr[as.vector(seqnames(gr))==c];
       ga<-LoadGa(bam, g, TRUE, exons, ex2tx, tx2gn, min.mapq, str, wht)[[1]];
       saveRDS(ga, paste(path, paste(c, '_loaded.rds', sep=''), sep='/'));
-      ga.list<-SplitGa(ga, sep=yml$split$separator, level=yml$split$level); 
-      path.group<-sapply(names(ga.list), function(nm) {cat(nm, '\n'); 
-        p<-paste(path, nm, sep='/');
-        if (!file.exists(p)) dir.create(p, recursive = TRUE); 
-        saveRDS(ga.list[[nm]], paste(p, paste(c, '_loaded.rds', sep=''), sep='/'));
-        p;
-      }); 
-      path.group;
+      if (length(ga[[1]]) > 0) {
+        ga.list<-SplitGa(ga, sep=yml$split$separator, level=yml$split$level); 
+        path.group<-sapply(names(ga.list), function(nm) {cat(nm, '\n'); 
+          p<-paste(path, nm, sep='/');
+          if (!file.exists(p)) dir.create(p, recursive = TRUE); 
+          saveRDS(ga.list[[nm]], paste(p, paste(c, '_loaded.rds', sep=''), sep='/'));
+          p;
+        }); 
+        path.group;
+      } else '';
     }); 
-    path.group<-sort(unique(unlist(path.group, use.names=FALSE))); 
+    path.group <- sort(unique(unlist(path.group, use.names=FALSE))); 
+    path.group <- path.group[path.group!='']; 
     
     # Read count by read subgroups
     ct.all<-lapply(path.group, function(pth) {
