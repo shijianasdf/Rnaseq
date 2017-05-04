@@ -157,7 +157,7 @@ LoadGaSe<-function(bam, gr, min.mapq=1, wht=character(0)) {
   flushDumpedAlignments();
   reads<-readGAlignments(bam, use.names=TRUE, param=prm);
   
-  dmp <- NA;
+  dmp <- NULL;
   try(dmp <- getDumpedAlignments());
   
   gr<-ConvertGa2Gr(reads);
