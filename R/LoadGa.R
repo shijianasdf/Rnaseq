@@ -131,7 +131,9 @@ LoadGaPe<-function(bam, gr, min.mapq=1, wht=character(0)) {
   cat("Loading gapped alignment pairs from", bam, '\n');
   flushDumpedAlignments();
   reads<-readGAlignmentPairs(bam, use.names=TRUE, param=prm);
-  dmp<-getDumpedAlignments();
+  
+  dmp <- NA; 
+  try(dmp <- getDumpedAlignments());
   
   cat("Converting loaded reads to GRanges object\n");
   if (length(reads@first) > 0) gr.fst<-ConvertGa2Gr(reads@first) else gr.fst<-NULL;
@@ -154,7 +156,9 @@ LoadGaSe<-function(bam, gr, min.mapq=1, wht=character(0)) {
   
   flushDumpedAlignments();
   reads<-readGAlignments(bam, use.names=TRUE, param=prm);
-  dmp<-getDumpedAlignments();
+  
+  dmp <- NA;
+  try(dmp <- getDumpedAlignments());
   
   gr<-ConvertGa2Gr(reads);
   
