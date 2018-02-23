@@ -104,7 +104,7 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
   if (length(tx2gn)) mp$gene<-as.vector(tx2gn[mp$transcript]);
 
   if (keep) {
-    unm<-intv[setdiff(1:length(intv), x@queryHits)];
+    unm<-intv[setdiff(1:length(intv), olap[, 1])];
     unm$exon<-rep('', length(unm));
     unm$same.strand<-rep(FALSE, length(unm));
     unm$max.extension<-rep(0, length(unm));
