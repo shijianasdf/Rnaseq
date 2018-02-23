@@ -77,7 +77,8 @@ MapInterval2Exon<-function(intv, exons, type='within', strand=0, ex2tx=c(), tx2g
 
   if (strand < 0) strand(exons)<-c('+'='-', '-'='+', '*'='*')[as.vector(strand(exons))];
   x<-findOverlaps(intv, exons, type=type, ignore.strand=ig);
-  olap<-cbind(x@queryHits, x@subjectHits);
+  # olap<-cbind(x@queryHits, x@subjectHits);
+  olap <- as.matrix(x);
 
   mp<-intv[olap[, 1]];
   ex<-exons[olap[, 2]];
