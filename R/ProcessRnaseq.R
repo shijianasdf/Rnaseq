@@ -3,6 +3,7 @@ ProcessRnaseq <- function(fn.yaml) {
   
   require(Rsamtools);
   require(yaml);
+  require(RoCA);
   yaml<-yaml.load_file(fn.yaml);
   
   # path to output files
